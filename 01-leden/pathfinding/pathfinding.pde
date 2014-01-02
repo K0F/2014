@@ -1,9 +1,24 @@
 ArrayList sites;
-int num = 10;
+ArrayList connections;
+
+int num = 33;
+int NUMBER_OF_CONNECTIONS = 3;
+int BORDER = 20;
 
 void setup(){
 
   size(800,600,P2D);
+
+  reset();
+
+  smooth();
+  rectMode(CENTER);
+
+  textFont(createFont("Semplice Regular",8,false));
+  textAlign(CENTER);
+}
+
+void reset(){
 
   sites = new ArrayList();
 
@@ -11,18 +26,17 @@ void setup(){
     sites.add(new Site());
 
 
+  connections = new ArrayList();
+
   for(int i = 0 ; i < sites.size();i++){
     Site s = (Site)sites.get(i);
-
-    s.calculateDistances();
-
+    s.castConnections(NUMBER_OF_CONNECTIONS);
   }
-
-  rectMode(CENTER);
-
-  textFont(createFont("Semplice Regular",8,false));
 }
 
+void mousePressed(){
+  reset();
+}
 
 void draw(){
   background(255);
@@ -34,92 +48,145 @@ void draw(){
 
   }
 
+  drawConnections();
 
 }
 
-class Path{
-  int A,B = 0;
-  ArrayList way;
+void drawConnections(){
+  stroke(0,45);
+  for(int i = 0 ; i < connections.size();i++){
+    Connection c = (Connection)connections.get(i);
+    stroke(0,40);
+    line(c.A.pos.x,c.A.pos.y,c.B.pos.x,c.B.pos.y);
+    fill(0,100);
+    noStroke();
+    pushMatrix();
 
-  Path(){
-    A = (int)random(sites.size());
-    B = (int)random(sites.size());
+    PVector mid = new PVector(lerp(c.A.pos.x,c.B.pos.x,0.5),lerp(c.A.pos.y,c.B.pos.y,0.5));
+    text(round(c.distance),mid.x,mid.y);
 
-    while(B==A)
-      B = (int)random(sites.size());
-
+    translate(c.B.pos.x,c.B.pos.y);
+    rotate(atan2(c.B.pos.y-c.A.pos.y,c.B.pos.x-c.A.pos.x)+HALF_PI);
+    triangle(0,0,3,12,-3,12);
+    popMatrix();
   }
+}
 
-  void calculate(){
+/*
+   class Path{
+   int A,B = 0;
+   ArrayList way;
 
-    way = new ArrayList();
-    float d = width*height;
+   Path(){
+   A = (int)random(sites.size());
+   B = (int)random(sites.size());
 
-    Site start = (Site)sites.get(A);
+   while(B==A)
+   B = (int)random(sites.size());
 
-    int index = A;
-    int next = A;
+   }
 
-    while(index==B){
+   void calculate(){
 
-      for(int i = 0 ; i < start.distances.size();i++){
-        float tmp = (Float)start.distances.get(i);
-        if(tmp<d){
-          d = tmp;
-          index = i;
-        }
-        next = index;
-        way.add(index);
-      }
+   way = new ArrayList();
+   float d = width*height;
+
+   Site start = (Site)sites.get(A);
+
+   int index = A;
+   int next = A;
+
+   while(index==B){
+
+   for(int i = 0 ; i < start.distances.size();i++){
+   float tmp = (Float)start.distances.get(i);
+   if(tmp<d){
+   d = tmp;
+   index = i;
+   }
+   next = index;
+   way.add(index);
+   }
 
 
-    }
+   }
 
 
 
+   }
+
+   }
+ */
+class Connection{
+  Site A,B;
+  float distance;
+
+  Connection(Site _A,Site _B){
+    A=_A;
+    B=_B;
+    distance = dist(A.pos.x,A.pos.y,B.pos.x,B.pos.y);
   }
 
 }
 
 class Site{
   PVector pos;
-  ArrayList distances;
 
   Site(){
-    pos = new PVector(random(width),random(height));
+    pos = new PVector(random(BORDER,width-BORDER),random(BORDER,height-BORDER));
   }
 
-  void calculateDistances(){
+  void castConnections(int num){
 
-    distances = new ArrayList();
-    for(int i = 0 ; i < sites.size();i++){
-      Site s = (Site)sites.get(i);
-      distances.add((float)dist(pos.x,pos.y,s.pos.x,s.pos.y));
+
+    for(int q = 0 ; q < num ; q++){
+
+      float d = width*height;
+      int sel = -1;
+
+      for(int i = 0 ; i < sites.size();i++){
+        if(i!=sites.indexOf(this)){
+          Site s = (Site)sites.get(i);
+          float tmp = dist(s.pos.x,s.pos.y,pos.x,pos.y);
+
+          boolean isin = false;
+
+          //already has check
+          for(int ii = 0 ; ii < connections.size();ii++){
+            Connection c = (Connection)connections.get(ii);
+            if((c.B == s && c.A == this) || (c.A == s && c.B == this))
+              isin = true;
+          }
+
+          if(tmp < d && !isin){
+            d = tmp;
+            sel = i;
+            //if(!isin)
+             // sel = i;
+          }
+        }
+      }
+
+      if(sel != -1){
+        //println(sites.indexOf(this)+" => "+sites.indexOf((Site)sites.get(sel)));
+        connections.add(new Connection(this,(Site)sites.get(sel)));
+      }
     }
-
 
   }
 
   void draw(){
     pushMatrix();
     translate(pos.x,pos.y);
-    text(sites.indexOf(this),0,0);
+    text(sites.indexOf(this),0,-4);
     noStroke();
     fill(0);
     rect(0,0,5,5);
     popMatrix();
 
-    drawPaths();
 
   }
 
-  void drawPaths(){
-    stroke(0,15);
-    for(int i = 0 ; i < sites.size();i++){
-      Site s = (Site)sites.get(i);
-      line(pos.x,pos.y,s.pos.x,s.pos.y);
-    }
-  }
 
 
 }
