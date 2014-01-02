@@ -1,7 +1,7 @@
 ArrayList sites;
 ArrayList connections;
 
-int num = 33;
+int num = 99;
 int NUMBER_OF_CONNECTIONS = 2;
 int BORDER = 20;
 
@@ -78,20 +78,17 @@ void align(float speed){
   for(int i = 0 ; i < connections.size();i++){
     Connection c = (Connection)connections.get(i);
 
-    speed = c.distance * 2.0;
+    speed = c.distance;
 
     if(abs(c.distance-AVERAGE)>2.0)
       if(c.distance < AVERAGE){
-
         c.A.pos.x -= (c.B.pos.x-c.A.pos.x) / speed;   
         c.A.pos.y -= (c.B.pos.y-c.A.pos.y) / speed;   
-
         c.B.pos.x -= (c.A.pos.x-c.B.pos.x) / speed;   
         c.B.pos.y -= (c.A.pos.y-c.B.pos.y) / speed;
       }else if(c.distance > AVERAGE){
         c.A.pos.x += (c.B.pos.x-c.A.pos.x) / speed;   
         c.A.pos.y += (c.B.pos.y-c.A.pos.y) / speed;   
-
         c.B.pos.x += (c.A.pos.x-c.B.pos.x) / speed;   
         c.B.pos.y += (c.A.pos.y-c.B.pos.y) / speed;
       }
@@ -105,7 +102,7 @@ void drawConnections(){
     Connection c = (Connection)connections.get(i);
     stroke(0,40);
     line(c.A.pos.x,c.A.pos.y,c.B.pos.x,c.B.pos.y);
-    fill(0,100);
+    fill(100,0,0,100);
     noStroke();
     pushMatrix();
 
