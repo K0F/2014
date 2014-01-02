@@ -2,8 +2,10 @@ ArrayList sites;
 ArrayList connections;
 
 int num = 33;
-int NUMBER_OF_CONNECTIONS = 3;
+int NUMBER_OF_CONNECTIONS = 2;
 int BORDER = 20;
+
+float AVERAGE = 1.0;
 
 void setup(){
 
@@ -25,6 +27,11 @@ void reset(){
   for(int i = 0 ; i < num;i++)
     sites.add(new Site());
 
+  recalculate();
+
+}
+
+void recalculate(){
 
   connections = new ArrayList();
 
@@ -33,13 +40,24 @@ void reset(){
     s.castConnections(NUMBER_OF_CONNECTIONS);
   }
 }
-
 void mousePressed(){
   reset();
 }
 
+float averageD(){
+
+  float sum = 0;
+  for(int i = 0 ; i < connections.size();i++){
+    Connection c = (Connection)connections.get(i);
+    sum+=c.distance;
+  }
+  sum /= (connections.size()+1.0);
+  return sum;
+}
+
 void draw(){
   background(255);
+
 
   for(int i = 0 ; i < num;i++){
     Site s = (Site)sites.get(i);
@@ -48,8 +66,37 @@ void draw(){
 
   }
 
+  align(100.0);
   drawConnections();
 
+}
+
+void align(float speed){
+
+  AVERAGE = averageD();
+
+  for(int i = 0 ; i < connections.size();i++){
+    Connection c = (Connection)connections.get(i);
+
+    speed = c.distance * 2.0;
+
+    if(abs(c.distance-AVERAGE)>2.0)
+      if(c.distance < AVERAGE){
+
+        c.A.pos.x -= (c.B.pos.x-c.A.pos.x) / speed;   
+        c.A.pos.y -= (c.B.pos.y-c.A.pos.y) / speed;   
+
+        c.B.pos.x -= (c.A.pos.x-c.B.pos.x) / speed;   
+        c.B.pos.y -= (c.A.pos.y-c.B.pos.y) / speed;
+      }else if(c.distance > AVERAGE){
+        c.A.pos.x += (c.B.pos.x-c.A.pos.x) / speed;   
+        c.A.pos.y += (c.B.pos.y-c.A.pos.y) / speed;   
+
+        c.B.pos.x += (c.A.pos.x-c.B.pos.x) / speed;   
+        c.B.pos.y += (c.A.pos.y-c.B.pos.y) / speed;
+      }
+  }
+  recalculate();
 }
 
 void drawConnections(){
@@ -162,7 +209,7 @@ class Site{
             d = tmp;
             sel = i;
             //if(!isin)
-             // sel = i;
+            // sel = i;
           }
         }
       }
