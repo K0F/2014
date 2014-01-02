@@ -40,6 +40,7 @@ void recalculate(){
     s.castConnections(NUMBER_OF_CONNECTIONS);
   }
 }
+
 void mousePressed(){
   reset();
 }
@@ -55,22 +56,6 @@ float averageD(){
   return sum;
 }
 
-void draw(){
-  background(255);
-
-
-  for(int i = 0 ; i < num;i++){
-    Site s = (Site)sites.get(i);
-
-    s.draw();
-
-  }
-
-  align(100.0);
-  drawConnections();
-
-}
-
 void align(float speed){
 
   AVERAGE = averageD();
@@ -78,9 +63,10 @@ void align(float speed){
   for(int i = 0 ; i < connections.size();i++){
     Connection c = (Connection)connections.get(i);
 
-    speed = c.distance;
+    float q = noise(frameCount/100.0+c.A.pos.x/100.0)*4.0;
+    speed = c.distance * q;
 
-    if(abs(c.distance-AVERAGE)>2.0)
+    if(abs(c.distance-AVERAGE) > 2.0)
       if(c.distance < AVERAGE){
         c.A.pos.x -= (c.B.pos.x-c.A.pos.x) / speed;   
         c.A.pos.y -= (c.B.pos.y-c.A.pos.y) / speed;   
@@ -116,6 +102,18 @@ void drawConnections(){
   }
 }
 
+
+void draw(){
+  background(255);
+
+  for(int i = 0 ; i < num;i++){
+    Site s = (Site)sites.get(i);
+    s.draw();
+  }
+
+  align(100.0);
+  drawConnections();
+}
 /*
    class Path{
    int A,B = 0;
