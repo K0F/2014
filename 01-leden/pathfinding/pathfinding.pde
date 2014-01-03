@@ -1,23 +1,55 @@
 ArrayList sites;
 ArrayList connections;
+ArrayList walkers;
 
-int num = 99;
-int NUMBER_OF_CONNECTIONS = 2;
-int BORDER = 20;
+Site end;
+
+int num = 100;
+int NUMBER_OF_CONNECTIONS = 5;
+int BORDER = 100;
+
+
+
+int NUM_WALKERS = 500;
+int MAX_STEPS = 100;
+float HEURESTICS = 95.0;
 
 float AVERAGE = 1.0;
 
+float RECORD = 999999999;
+
 void setup(){
 
-  size(800,600,P2D);
+  size(1024,768,P2D);
 
   reset();
 
   smooth();
   rectMode(CENTER);
 
+  ellipseMode(CENTER);
   textFont(createFont("Semplice Regular",8,false));
   textAlign(CENTER);
+
+}
+
+/////////////////
+
+Site getMostDistant(){
+  float d = 0.0;
+  Site first = (Site)sites.get(0);
+  int idx = -1;
+
+  for(int i = 1 ; i < sites.size();i++){
+    Site tmp = (Site)sites.get(i);
+    float dd = dist(tmp.pos.x,tmp.pos.y,first.pos.x,first.pos.y);
+    if(dd>d){
+      d = dd;
+      idx = i;
+    }
+  }
+
+  return (Site)sites.get(idx);
 }
 
 void reset(){
@@ -28,6 +60,13 @@ void reset(){
     sites.add(new Site());
 
   recalculate();
+
+  end = getMostDistant();
+
+  walkers = new ArrayList();
+
+  for(int i = 0 ; i < NUM_WALKERS;i++)
+    walkers.add(new Walker());
 
 }
 
@@ -86,20 +125,22 @@ void drawConnections(){
   stroke(0,45);
   for(int i = 0 ; i < connections.size();i++){
     Connection c = (Connection)connections.get(i);
+    strokeWeight(c.weight);
     stroke(0,40);
     line(c.A.pos.x,c.A.pos.y,c.B.pos.x,c.B.pos.y);
     fill(100,0,0,100);
     noStroke();
-    pushMatrix();
 
     PVector mid = new PVector(lerp(c.A.pos.x,c.B.pos.x,0.5),lerp(c.A.pos.y,c.B.pos.y,0.5));
     text(round(c.distance),mid.x,mid.y);
-
+/*
+    pushMatrix();
     translate(c.B.pos.x,c.B.pos.y);
     rotate(atan2(c.B.pos.y-c.A.pos.y,c.B.pos.x-c.A.pos.x)+HALF_PI);
-    triangle(0,0,3,12,-3,12);
+    triangle(0,0,3+c.weight,12+c.weight,-3-c.weight,12+c.weight);
     popMatrix();
-  }
+  */
+    }
 }
 
 
@@ -111,59 +152,183 @@ void draw(){
     s.draw();
   }
 
-  align(100.0);
+  //  align(100.0);
   drawConnections();
+
+  for(int i = 0; i < walkers.size();i++){
+
+    Walker walker = (Walker)walkers.get(i);
+    walker.draw();
+  }
 }
-/*
-   class Path{
-   int A,B = 0;
-   ArrayList way;
 
-   Path(){
-   A = (int)random(sites.size());
-   B = (int)random(sites.size());
+class Walker{
+  PVector pos;
+  Site current,next;
+  float speed = 2.0;
+  float hist = 0;
+  ArrayList fullhist;
 
-   while(B==A)
-   B = (int)random(sites.size());
+  Walker(){
+    fullhist = new ArrayList();
 
-   }
+    current = (Site)sites.get(0);
+    pos = new PVector(current.pos.x,current.pos.y);
+    next = getNext();
 
-   void calculate(){
+    //println(next);
+  }
 
-   way = new ArrayList();
-   float d = width*height;
-
-   Site start = (Site)sites.get(A);
-
-   int index = A;
-   int next = A;
-
-   while(index==B){
-
-   for(int i = 0 ; i < start.distances.size();i++){
-   float tmp = (Float)start.distances.get(i);
-   if(tmp<d){
-   d = tmp;
-   index = i;
-   }
-   next = index;
-   way.add(index);
-   }
-
-
-   }
+  void draw(){
+    pushMatrix();
+    translate(pos.x,pos.y);
+    fill(#ffcc00,120);
+    ellipse(0,0,10,10);
+    popMatrix();
 
 
 
-   }
+    if(next!=null&&current!=null)
+      move();
 
-   }
- */
+
+  }
+
+  void move(){
+    PVector dir = new PVector(next.pos.x-current.pos.x,next.pos.y-current.pos.y);
+    dir.normalize();
+    dir.mult(speed);
+    pos.add(dir);
+
+    if(dist(pos.x,pos.y,next.pos.x,next.pos.y) < 1.0){
+
+
+      
+
+      if(next==end){
+        if(RECORD>hist){
+          RECORD = hist;  
+          win(1.0);
+        }else{
+          win(0.1);
+        }
+      } 
+      
+      Site previous = current;
+      current = next;
+      pos = new PVector(current.pos.x,current.pos.y);
+      
+      while(previous==next)
+      next = getNext();
+
+    }
+  }
+
+  void lose(){
+    ArrayList filtered = new ArrayList();
+    for(int i = 0 ; i < fullhist.size();i++){
+      Connection c = (Connection)fullhist.get(i);
+      boolean uniq = true;
+
+      for(int q = 0; q < filtered.size();q++)
+      {
+        Connection ctmp = (Connection)connections.get(q);
+        if(ctmp==c){
+          uniq = false;
+          break;
+        }
+      }
+
+      if(uniq)
+        filtered.add(c);
+    }
+
+    for(int q = 0;q<filtered.size();q++){
+      Connection c = (Connection)fullhist.get(q);
+      c.weight += (1.0-c.weight)/100.0;
+    }
+    walkers.add(new Walker());
+    walkers.remove(this);
+  }
+
+  void win(float reward){
+    ArrayList filtered = new ArrayList();
+    for(int i = 0 ; i < fullhist.size();i++){
+      Connection c = (Connection)fullhist.get(i);
+      boolean uniq = true;
+
+      for(int q = 0; q < filtered.size();q++)
+      {
+        Connection ctmp = (Connection)connections.get(q);
+        if(ctmp==c){
+          uniq = false;
+          break;
+        }
+      }
+
+      if(uniq)
+        filtered.add(c);
+    }
+
+    for(int q = 0;q<filtered.size();q++){
+      Connection c = (Connection)fullhist.get(q);
+      c.weight += reward;
+    }
+    walkers.add(new Walker());
+    walkers.remove(this);
+  }
+
+  Site getNext(){
+
+    ArrayList dirs = new ArrayList();
+    ArrayList indexes = new ArrayList();
+    for(int i = 0 ; i < connections.size();i++){
+      Connection c = (Connection)connections.get(i);
+      Site a = c.A;
+      Site b = c.B;
+
+      //bidirectional
+      if(a == current){
+        dirs.add(b);
+        indexes.add(i);
+      }
+      if(b == current){
+        dirs.add(a);
+        indexes.add(i);
+      }
+
+
+    }
+
+    float maxW = 1.0;
+    int best = (int)random(dirs.size());
+
+    //heurestics
+    if(random(100) < HEURESTICS)
+    for(int i = 0 ; i < dirs.size();i++){
+      Connection c = (Connection)connections.get((Integer)indexes.get(i));
+      if(c.weight > maxW ){
+        maxW = c.weight;
+        best = i;
+      }
+    }
+
+    int choice = best;
+    hist += ((Connection)connections.get(choice)).distance;
+    Site tmp = (Site)dirs.get(choice);
+    fullhist.add((Connection)connections.get((Integer)indexes.get(choice)));
+    return tmp;
+  }
+
+}
+
 class Connection{
   Site A,B;
   float distance;
+  float weight;
 
   Connection(Site _A,Site _B){
+    weight = 1.0;
     A=_A;
     B=_B;
     distance = dist(A.pos.x,A.pos.y,B.pos.x,B.pos.y);
@@ -220,9 +385,10 @@ class Site{
   void draw(){
     pushMatrix();
     translate(pos.x,pos.y);
+    fill(this==end?#ff0000:0);
     text(sites.indexOf(this),0,-4);
     noStroke();
-    fill(0);
+    fill(this==end?#ff0000:0);
     rect(0,0,5,5);
     popMatrix();
 
