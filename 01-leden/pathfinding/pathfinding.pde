@@ -133,14 +133,14 @@ void drawConnections(){
 
     PVector mid = new PVector(lerp(c.A.pos.x,c.B.pos.x,0.5),lerp(c.A.pos.y,c.B.pos.y,0.5));
     text(round(c.distance),mid.x,mid.y);
-/*
-    pushMatrix();
-    translate(c.B.pos.x,c.B.pos.y);
-    rotate(atan2(c.B.pos.y-c.A.pos.y,c.B.pos.x-c.A.pos.x)+HALF_PI);
-    triangle(0,0,3+c.weight,12+c.weight,-3-c.weight,12+c.weight);
-    popMatrix();
-  */
-    }
+    /*
+       pushMatrix();
+       translate(c.B.pos.x,c.B.pos.y);
+       rotate(atan2(c.B.pos.y-c.A.pos.y,c.B.pos.x-c.A.pos.x)+HALF_PI);
+       triangle(0,0,3+c.weight,12+c.weight,-3-c.weight,12+c.weight);
+       popMatrix();
+     */
+  }
 }
 
 
@@ -203,7 +203,7 @@ class Walker{
     if(dist(pos.x,pos.y,next.pos.x,next.pos.y) < 1.0){
 
 
-      
+
 
       if(next==end){
         if(RECORD>hist){
@@ -213,13 +213,13 @@ class Walker{
           win(0.1);
         }
       } 
-      
+
       Site previous = current;
       current = next;
       pos = new PVector(current.pos.x,current.pos.y);
-      
+
       while(previous==next)
-      next = getNext();
+        next = getNext();
 
     }
   }
@@ -305,18 +305,21 @@ class Walker{
 
     //heurestics
     if(random(100) < HEURESTICS)
-    for(int i = 0 ; i < dirs.size();i++){
-      Connection c = (Connection)connections.get((Integer)indexes.get(i));
-      if(c.weight > maxW ){
-        maxW = c.weight;
-        best = i;
+      for(int i = 0 ; i < dirs.size();i++){
+        Connection c = (Connection)connections.get((Integer)indexes.get(i));
+        if(c.weight > maxW ){
+          maxW = c.weight;
+          best = i;
+        }
       }
-    }
 
     int choice = best;
     hist += ((Connection)connections.get(choice)).distance;
+    Connection ccc = (Connection)connections.get((Integer)indexes.get(choice));
+    //experimental weakening
+    ccc.weight += (1.0-ccc.weight)/100.0;
     Site tmp = (Site)dirs.get(choice);
-    fullhist.add((Connection)connections.get((Integer)indexes.get(choice)));
+    fullhist.add(ccc);
     return tmp;
   }
 
