@@ -204,7 +204,6 @@ class Walker{
 
 
 
-
       if(next==end){
         if(RECORD>hist){
           RECORD = hist;  
