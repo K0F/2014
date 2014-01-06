@@ -1,9 +1,9 @@
 Shape test;
 int imgno = 0;
-float rots[] = {-35,35};
+float rots[] = {-7,7,180};
 float dist = 10;
-
-int step = 2;
+float siz = 60;
+int step = 1;
 
 PFont font;
 
@@ -11,21 +11,22 @@ void setup(){
 
   size(800,800);
 
-  font = createFont(PFont.list()[(int)random(PFont.list().length)],55,true);
-  test =new Shape(64,64);
+  font = createFont(PFont.list()[(int)random(PFont.list().length)],siz,true);
+  test =new Shape(80,80);
 
   background(0);
 
+  smooth();
 
 }
 
 void keyPressed(){
-    clear();
+  clear();
 }
 
 void draw(){
 
-  test.detect(10);
+  test.detect(50);
 
 }
 
@@ -56,7 +57,7 @@ class Shape{
 
     tile = createGraphics(w,h,JAVA2D);
     tile.beginDraw();
-    tile.textFont(font);
+    tile.textFont(font,random(12,siz));
     tile.textAlign(CENTER);
     tile.smooth();
     tile.translate(w/2,h/2);
@@ -64,7 +65,7 @@ class Shape{
     tile.translate(-w/2,-h/2);
     tile.fill(255);
     tile.noStroke();
-    tile.text((char)(int)random(65,90)+"",w/2,h-20);
+    tile.text((char)(int)random(33,122)+"",w/2,h-20);
     tile.endDraw();
     /*
        mask = createGraphics(w,h,JAVA2D);
