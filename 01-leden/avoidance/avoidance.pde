@@ -5,20 +5,37 @@ float dist = 10;
 
 int step = 2;
 
+PFont font;
+
 void setup(){
 
   size(800,800);
 
+  font = createFont(PFont.list()[(int)random(PFont.list().length)],55,true);
   test =new Shape(64,64);
 
   background(0);
+
+
 }
 
+void keyPressed(){
+    clear();
+}
 
 void draw(){
 
   test.detect(10);
 
+}
+
+void clear(){
+  font = createFont(PFont.list()[(int)random(PFont.list().length)],55,true);
+  test =new Shape(64,64);
+
+  save("out"+nf(imgno,5)+".png");
+  imgno++;
+  background(0);
 }
 
 class Shape{
@@ -39,26 +56,28 @@ class Shape{
 
     tile = createGraphics(w,h,JAVA2D);
     tile.beginDraw();
+    tile.textFont(font);
+    tile.textAlign(CENTER);
     tile.smooth();
     tile.translate(w/2,h/2);
     tile.rotate(rot);
     tile.translate(-w/2,-h/2);
     tile.fill(255);
     tile.noStroke();
-    tile.triangle(w/5*2,10,w/5*3,10,w/2,h-10);
+    tile.text((char)(int)random(65,90)+"",w/2,h-20);
     tile.endDraw();
-
-    mask = createGraphics(w,h,JAVA2D);
-    mask.beginDraw();
-    mask.smooth();
-    mask.translate(w/2,h/2);
-    mask.rotate(rot);
-    mask.translate(-w/2,-h/2);
-    mask.fill(255);
-    mask.stroke(255);
-    mask.strokeWeight(dist);
-    mask.triangle(w/5*2,10,w/5*3,10,w/2,h-10);
-    mask.endDraw();
+    /*
+       mask = createGraphics(w,h,JAVA2D);
+       mask.beginDraw();
+       mask.smooth();
+       mask.translate(w/2,h/2);
+       mask.rotate(rot);
+       mask.translate(-w/2,-h/2);
+       mask.fill(255);
+       mask.stroke(255);
+       mask.strokeWeight(dist);
+       mask.endDraw();
+     */
   }
 
   void detect(int iter){
@@ -83,7 +102,7 @@ SKIP:
       for(int _y = y; _y < y + h - 2 ; _y+=step){
         X = 0;
         for(int _x = x; _x < x + w - 2; _x+=step){
-          if(brightness(pixels[(_y)*width+(_x)]) > 3 && brightness(mask.pixels[Y*w+X]) > 3){
+          if(brightness(pixels[(_y)*width+(_x)]) > 3 && brightness(tile.pixels[Y*w+X]) > 3){
             overlap = true;
             break SKIP;
           }
@@ -105,11 +124,5 @@ SKIP:
     image(tile,x,y);
   }
 
-  void clear(){
-    save("out"+nf(imgno,5)+".png");
-    x=0;
-    y=0;
-    background(0);
-  }
 
 }
