@@ -68,7 +68,7 @@ void draw(){
 
 rewrite:
   for(int i =0 ; i < primes.length;i++){
-   
+
     mem[xx][yy] = primes[i];
 
     yy++;
@@ -108,8 +108,8 @@ loop:
 
   for(int i = 0;i<width;i++){
     for(int ii = 0 ; ii<mem[i].length;ii++){
-    if(mem[i][ii])
-      set(i,ii,color(#ff0000));
+      if(mem[i][ii])
+        set(i,ii,color(#ff0000));
     }
   }
 
