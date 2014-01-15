@@ -22,6 +22,8 @@ Tue Jan 14 21:20:45 CET 2014
 */
 int speedup = 20;
 
+boolean[][] mem;
+
 float x, y;
 boolean primes[];
 
@@ -37,8 +39,10 @@ void setup(){
 
 
   textFont(loadFont("04b24-8.vlw"));
+  mem = new boolean[width][height];
 }
 
+int X = 0;
 
 void draw(){
   fill(0,127);
@@ -56,6 +60,27 @@ void draw(){
   zavit *= 0.998;// PI/R/(310.45);//noise(frameCount/1000.0)*10.0;
   int ccnt = 0;
 
+  X++;
+  if(X>=width)
+    X=0;
+
+  int xx = 0, yy = 0;
+
+rewrite:
+  for(int i =0 ; i < primes.length;i++){
+   
+    mem[xx][yy] = primes[i];
+
+    yy++;
+    if(yy>=mouseY){
+      xx++;
+      yy=0;
+    }
+
+    if(xx>=width)
+      break rewrite;
+  }
+
 loop:
   for(float f = 0 ;f < 1000000.0;f+=res){
     x = cos(f/zavit)*r;
@@ -66,8 +91,7 @@ loop:
     if(primes[cnt])
       set((int)x+(int)(width/2),(int)y+height/2,color(#ffffff,64));
 
-
-    if(cnt>=primes.length-height/8){
+    if(cnt>=primes.length-height){
       fill(primes[cnt]?#ff0000:#ffffff);
       text(cnt,0,ccnt*8+8);
       ccnt++;
@@ -80,6 +104,13 @@ loop:
 
     if(cnt>=primes.length)
       break loop;
+  }
+
+  for(int i = 0;i<width;i++){
+    for(int ii = 0 ; ii<mem[i].length;ii++){
+    if(mem[i][ii])
+      set(i,ii,color(#ff0000));
+    }
   }
 
 
