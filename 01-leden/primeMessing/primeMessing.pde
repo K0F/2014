@@ -20,7 +20,7 @@ Tue Jan 14 21:20:45 CET 2014
                            I8, ,8'
                             "Y8P'
 */
-int speedup = 20;
+int speedup = 17;
 
 boolean[][] mem;
 
@@ -45,7 +45,7 @@ void setup(){
 int X = 0;
 
 void draw(){
-  fill(0,127);
+  fill(0,200);
   rect(0,0,width,height);
 
   for(int i = 0;  i < speedup;i++){
@@ -55,9 +55,9 @@ void draw(){
 
   float r = 1.0;
   int cnt = 0;
-  R = 1.0/(primes.length)*(height/2.0-20.0);
+  R = 0.75/(primes.length)*(height/2.0-20.0);
 
-  zavit *= 0.998;// PI/R/(310.45);//noise(frameCount/1000.0)*10.0;
+  zavit += (map(mouseX,0,width,2.1,100.01)-zavit)/30.0;// 0.9998;// PI/R/(310.45);//noise(frameCount/1000.0)*10.0;
   int ccnt = 0;
 
   X++;
@@ -88,11 +88,15 @@ loop:
 
     //float shift = sin((frameCount/r*zavit)*(((int)x^(int)y)+0.0));
 
-    if(primes[cnt])
+    if(primes[cnt]){
       set((int)x+(int)(width/2),(int)y+height/2,color(#ffffff,64));
+    }else{
+      set((int)x+(int)(width/2),(int)y+height/2,color(#555555,64));
+
+    }
 
     if(cnt>=primes.length-height){
-      fill(primes[cnt]?#ff0000:#ffffff);
+      fill(primes[cnt]?#ffffff:#555555);
       text(cnt,0,ccnt*8+8);
       ccnt++;
     }
@@ -106,13 +110,14 @@ loop:
       break loop;
   }
 
+  /*
   for(int i = 0;i<width;i++){
     for(int ii = 0 ; ii<mem[i].length;ii++){
       if(mem[i][ii])
         set(i,ii,color(#ff0000));
     }
   }
-
+*/
 
   updatePixels();
 
