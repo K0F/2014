@@ -20,7 +20,7 @@ Tue Jan 14 21:20:45 CET 2014
                            I8, ,8'
                             "Y8P'
 */
-int speedup = 17;
+int speedup = 20;
 
 boolean[][] mem;
 
@@ -126,7 +126,7 @@ loop:
 
 boolean primes(int n)[] {
   boolean tmp[] = new boolean[n+1];
-  for (int i = 1; i <= n; i++) {
+  for (int i = 1; i <= n; i+=2) {
     int c = 0;
 test:
     for (int j = 1 ; j <= i; j++) {
@@ -149,7 +149,7 @@ boolean prime(int n) {
   int c = 0;
 
 test:
-  for (int j = 1 ; j <= n; j++) {
+  for (int j = 1 ; j <= n; j+=2) {
     if (n%j==0)
       c++;
 
