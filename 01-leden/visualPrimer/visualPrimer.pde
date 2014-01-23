@@ -78,10 +78,9 @@ void draw(){
      updatePixels();
      }
    */
+ 
   if(save)
     saveFrame("/home/kof/render/visualPrimer/#####.png");
-
-
 }
 
 boolean isPrime(int num){
