@@ -19,8 +19,8 @@ void setup(){
 void printAllConnections(){
 
   for(Object tmp: nodes){
-   Node n = (Node)tmp;
-     n.printConnections();
+    Node n = (Node)tmp;
+    n.printConnections();
   }
 }
 
@@ -28,22 +28,34 @@ void printAllConnections(){
 void castNodes2(){
   nodes = new ArrayList();
   for(Object w: words){
-    nodes.add(new Node((String)w));
+    String wtmp = (String)w;
+    boolean has = false;
+check:
+    for(Object n: nodes){
+      Node ntmp = (Node)n;
+      if(wtmp.equals(ntmp.word)){
+        has=true;
+        break check;
+      }
+    }
+
+    if(!check)
+      nodes.add(new Node((String)w));
   }
 
   for(Object w: words){
-    String word = (String)w;
-  
-          for(Object n: nodes){
-            Node tmp = (Node)n;
+    String current = (String)w;
 
-            if(tmp.word.equals(word)){
-              tmp.addConnection(word);
-            }
-          }
+    for(Object n: nodes){
+      Node tmp = (Node)n;
+
+      if(tmp.word.equals(current)){
+        try{
+          tmp.addConnection((String)words.get(words.indexOf(current)+1));
+        }catch(Exception e){;}
+      }
+    }
   }
-
-
 }
 
 
@@ -58,23 +70,25 @@ void getWords(){
     String tmp[] = splitTokens(text[i]," \t");
     for(int ii = 0 ; ii < tmp.length;ii++){
       raw += tmp[ii]+" ";
-      boolean has = false;
+      /*
+         boolean has = false;
 
 check:
-      for(int iii = 0 ; iii < words.size(); iii++){
-        String w = (String)words.get(iii);
-        if(w.equals(tmp[ii])){
-          has = true;
-          break check;
-        }
-      }
+for(int iii = 0 ; iii < words.size(); iii++){
+String w = (String)words.get(iii);
+if(w.equals(tmp[ii])){
+has = true;
+break check;
+}
+}
 
-      if(!has){
-        words.add(tmp[ii]+"");
-      }
+if(!has){
+       */
+      words.add(tmp[ii]+"");
+      //  }
 
-    }
-  }
+      }
+}
 }
 
 void draw(){
