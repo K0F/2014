@@ -1,4 +1,12 @@
 
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
+import com.sun.speech.freetts.audio.JavaClipAudioPlayer;
+
+
+Basnik verlaine;
+
+
 boolean DEBUG = false;
 
 String text[];
@@ -6,24 +14,78 @@ String raw;
 ArrayList words;
 ArrayList nodes;
 
+Node walker;
+String result = "";
+ArrayList output;
 
+int pause = 100;
+int speed = 2;
 
 void setup(){
 
   size(480,320);
 
-  textFont(loadFont("04b24-8.vlw"));
+  verlaine = new Basnik("kevin16");
+
+  textFont(loadFont("SempliceRegular-8.vlw"));
 
   getWords();
   castNodes();
   makeConnections();
   printAllConnections();
+
+  walker = (Node)nodes.get((int)random(nodes.size()));
+  output = new ArrayList();
+  output.add(walker.word);
 }
 
 void draw(){
 
   background(0);
 
+  if(frameCount%pause==0){
+    walker = walker.pickNext();
+    pause =  walker.word.length() * speed;
+    result += walker.word+" ";
+    output.add(walker.word);
+  }
+
+
+  int x = 10, y = 10;
+  int first = 0;
+  int c = 0;
+
+  for(Object a: output){
+    text((String)a,x,y);
+
+    float off = textWidth((String)a+" ");
+    x += (int)off;
+
+
+    if(x>=width-20-off){
+      if(y==10)
+        first = c;
+
+
+      x=10;
+      y+=10;
+
+    }
+    c++;
+  }
+
+  if(y>=20){
+    String tmp = "";
+    for(int i = 0;i<first;i++){
+      tmp+=(String)output.get(i)+" ";
+    }
+
+    verlaine.mluv(tmp);
+
+    for(int i = first ; i >= 0;i--){
+      output.remove(i);
+    }
+  }
 
 
 }
@@ -41,6 +103,20 @@ class Node{
     choices = new ArrayList();
     next = new ArrayList();
     word = _word;
+  }
+
+  Node pickNext(){
+    try{
+      Node tmp = (Node)next.get((int)random(next.size()));
+
+      while(tmp==null){
+        tmp = (Node)next.get((int)random(next.size()));
+      }
+
+      return tmp;
+    }catch(Exception e){
+      return this;
+    }
   }
 
   void addConnection(Node _n){
@@ -69,13 +145,16 @@ search:
   }
 
   void printConnections(){
-    print(word+" -> ");
+    if(DEBUG)
+      print(word+" -> ");
     for(Object tmp: next){
       Node n = (Node)tmp;
-      print(n.word+", ");
+      if(DEBUG)
+        print(n.word+", ");
 
     }
-    println(next.size());
+    if(DEBUG)
+      println(next.size());
   }
 }
 
@@ -142,7 +221,7 @@ void getWords(){
   raw = "";
 
   for(int i = 0 ;i < text.length;i++){
-    String tmp[] = splitTokens(text[i],"?.,!()/ \t");
+    String tmp[] = splitTokens(text[i]," ");
     for(int ii = 0 ; ii < tmp.length;ii++){
       raw += tmp[ii]+" ";
       words.add(tmp[ii]+"");
@@ -150,5 +229,59 @@ void getWords(){
     }
   }
 }
+public class Basnik {
+  String voiceName = "alan";
+  VoiceManager voiceManager;
+  Voice voice; 
 
+  Basnik(String name){
+    voiceName = name;     
+    this.setup(); 
+  }
 
+  void listAllVoices() {
+    System.out.println();
+    System.out.println("All voices available:");    
+    VoiceManager voiceManager = VoiceManager.getInstance();
+    Voice[] voices = voiceManager.getVoices();
+    for (int i = 0; i < voices.length; i++) {
+      System.out.println("    " + voices[i].getName()
+          + " (" + voices[i].getDomain() + " domain)");
+    }
+  }
+
+  void setup() {
+    listAllVoices();
+    System.out.println();
+    System.out.println("Using voice: " + voiceName);
+
+    voiceManager = VoiceManager.getInstance();
+    voice = voiceManager.getVoice(voiceName); 
+
+    voice.setPitch(2.75);
+    voice.setPitchShift(0.75);
+    // voice.setPitchRange(10.1); //mutace
+    voice.setStyle("breathy");  //"business", "casual", "robotic", "breathy"
+
+    if (voice == null) {
+      System.err.println(
+          "Cannot find a voice named "
+          + voiceName + ".  Please specify a different voice.");
+      System.exit(1);
+    } 
+    voice.allocate();
+  }
+
+  void mluv(String _a){     
+
+    if(_a==null){
+      _a= "nothing"; 
+    }
+    voice.speak(_a);
+
+  }
+
+  void exit(){
+    voice.deallocate();  
+  }
+} 
