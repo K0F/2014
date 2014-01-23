@@ -9,7 +9,7 @@ void setup(){
   getWords();
   castNodes();
   makeConnections();
-  printAllConnections();
+  // printAllConnections();
 }
 
 void printAllConnections(){
@@ -37,28 +37,36 @@ check:
     }
 
     if(!has)
-      nodes.add(new Node((String)w));
+      nodes.add(new Node(wtmp));
   }
 
 }
 
 void makeConnections(){
+  for(int i = 0 ; i < words.size()-1;i++){
+    String current = (String)words.get(i);
+    String next = (String)words.get(i+1);
 
-  for(Object w: words){
-    String current = (String)w;
+    Node curr = getNode(current);
+    Node nxt = getNode(next);
 
-    for(Object n: nodes){
-      Node tmp = (Node)n;
+    curr.addConnection(nxt);
 
-      if(tmp.word.equals(current)){
-        try{
-          tmp.addConnection((String)words.get(words.indexOf(current)+1));
-        }catch(Exception e){;}
-      }
+  }
+}
+
+Node getNode(String _in){
+  Node out = null;
+  for(Object n: nodes){
+    Node tmp = (Node)n;  
+    if(tmp.word.equals(_in)){
+      out = tmp;
     }
   }
+  return out;
 
 }
+
 void getWords(){
 
 
@@ -67,7 +75,7 @@ void getWords(){
   raw = "";
 
   for(int i = 0 ;i < text.length;i++){
-    String tmp[] = splitTokens(text[i],".,!()/ \t");
+    String tmp[] = splitTokens(text[i],"?.,!()/ \t");
     for(int ii = 0 ; ii < tmp.length;ii++){
       raw += tmp[ii]+" ";
       words.add(tmp[ii]+"");
@@ -90,12 +98,14 @@ class Node{
   String word;
 
   Node(String _word){
-
     next = new ArrayList();
     word = _word;
-
   }
 
+  void addConnection(Node _n){
+    println(word+ " is searching for: "+_n.word);
+        next.add(_n);
+  }
   void addConnection(String _in){
     println(word+ " is searching for: "+_in);
     int test = 0;
