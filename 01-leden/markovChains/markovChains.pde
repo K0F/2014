@@ -1,7 +1,3 @@
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
-
-
 String text[];
 String raw;
 ArrayList words;
