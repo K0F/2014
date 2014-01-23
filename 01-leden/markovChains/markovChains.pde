@@ -1,3 +1,6 @@
+
+boolean DEBUG = false;
+
 String text[];
 String raw;
 ArrayList words;
@@ -9,7 +12,7 @@ void setup(){
   getWords();
   castNodes();
   makeConnections();
-  // printAllConnections();
+  printAllConnections();
 }
 
 void printAllConnections(){
@@ -89,25 +92,43 @@ void draw(){
 
 }
 
+class Choice{
+
+  float w;
+  Node n;
+
+  Choice(Node _n, float _w){
+    n = _n;
+      w = _w;
+  }
+}
+
 
 class Node{
   ArrayList next;
   ArrayList positions;
+  ArrayList choices;
   int id;
   float weights[];
   String word;
 
   Node(String _word){
+    choices = new ArrayList();
     next = new ArrayList();
     word = _word;
   }
 
   void addConnection(Node _n){
-    println(word+ " is searching for: "+_n.word);
-        next.add(_n);
+    if(DEBUG)
+      println(word+ " is searching for: "+_n.word);
+    next.add(_n);
   }
+
+  
+
   void addConnection(String _in){
-    println(word+ " is searching for: "+_in);
+    if(DEBUG)
+      println(word+ " is searching for: "+_in);
     int test = 0;
 search:
     for(Object tmp: nodes){
