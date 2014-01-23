@@ -6,13 +6,77 @@ String raw;
 ArrayList words;
 ArrayList nodes;
 
+
+
 void setup(){
 
+  size(480,320);
+
+  textFont(loadFont("04b24-8.vlw"));
 
   getWords();
   castNodes();
   makeConnections();
   printAllConnections();
+}
+
+void draw(){
+
+  background(0);
+
+
+
+}
+
+
+class Node{
+  ArrayList next;
+  ArrayList positions;
+  ArrayList choices;
+  int id;
+  float weights[];
+  String word;
+
+  Node(String _word){
+    choices = new ArrayList();
+    next = new ArrayList();
+    word = _word;
+  }
+
+  void addConnection(Node _n){
+    if(DEBUG)
+      println(word+ " is searching for: "+_n.word);
+    next.add(_n);
+  }
+
+
+
+
+  void addConnection(String _in){
+    if(DEBUG)
+      println(word+ " is searching for: "+_in);
+    int test = 0;
+search:
+    for(Object tmp: nodes){
+      Node n = (Node)tmp; 
+      if(n.word.equals(_in)){
+        test = nodes.indexOf(n);
+        Node newNode = (Node)nodes.get(test);
+        next.add(newNode);
+        break search;
+      }
+    }
+  }
+
+  void printConnections(){
+    print(word+" -> ");
+    for(Object tmp: next){
+      Node n = (Node)tmp;
+      print(n.word+", ");
+
+    }
+    println(next.size());
+  }
 }
 
 void printAllConnections(){
@@ -87,68 +151,4 @@ void getWords(){
   }
 }
 
-void draw(){
 
-
-}
-
-class Choice{
-
-  float w;
-  Node n;
-
-  Choice(Node _n, float _w){
-    n = _n;
-      w = _w;
-  }
-}
-
-
-class Node{
-  ArrayList next;
-  ArrayList positions;
-  ArrayList choices;
-  int id;
-  float weights[];
-  String word;
-
-  Node(String _word){
-    choices = new ArrayList();
-    next = new ArrayList();
-    word = _word;
-  }
-
-  void addConnection(Node _n){
-    if(DEBUG)
-      println(word+ " is searching for: "+_n.word);
-    next.add(_n);
-  }
-
-  
-
-  void addConnection(String _in){
-    if(DEBUG)
-      println(word+ " is searching for: "+_in);
-    int test = 0;
-search:
-    for(Object tmp: nodes){
-      Node n = (Node)tmp; 
-      if(n.word.equals(_in)){
-        test = nodes.indexOf(n);
-        Node newNode = (Node)nodes.get(test);
-        next.add(newNode);
-        break search;
-      }
-    }
-  }
-
-  void printConnections(){
-    print(word+" -> ");
-    for(Object tmp: next){
-      Node n = (Node)tmp;
-      print(n.word+", ");
-
-    }
-    println(next.size());
-  }
-}
