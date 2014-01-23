@@ -11,8 +11,8 @@ void setup(){
 
 
   getWords();
-
-  castNodes2();
+  castNodes();
+  makeConnections();
   printAllConnections();
 }
 
@@ -25,11 +25,12 @@ void printAllConnections(){
 }
 
 
-void castNodes2(){
+void castNodes(){
   nodes = new ArrayList();
   for(Object w: words){
     String wtmp = (String)w;
     boolean has = false;
+
 check:
     for(Object n: nodes){
       Node ntmp = (Node)n;
@@ -39,9 +40,13 @@ check:
       }
     }
 
-    if(!check)
+    if(!has)
       nodes.add(new Node((String)w));
   }
+
+}
+
+void makeConnections(){
 
   for(Object w: words){
     String current = (String)w;
@@ -56,9 +61,8 @@ check:
       }
     }
   }
+
 }
-
-
 void getWords(){
 
 
@@ -67,28 +71,13 @@ void getWords(){
   raw = "";
 
   for(int i = 0 ;i < text.length;i++){
-    String tmp[] = splitTokens(text[i]," \t");
+    String tmp[] = splitTokens(text[i],".,!()/ \t");
     for(int ii = 0 ; ii < tmp.length;ii++){
       raw += tmp[ii]+" ";
-      /*
-         boolean has = false;
-
-check:
-for(int iii = 0 ; iii < words.size(); iii++){
-String w = (String)words.get(iii);
-if(w.equals(tmp[ii])){
-has = true;
-break check;
-}
-}
-
-if(!has){
-       */
       words.add(tmp[ii]+"");
-      //  }
 
-      }
-}
+    }
+  }
 }
 
 void draw(){
@@ -112,11 +101,16 @@ class Node{
   }
 
   void addConnection(String _in){
+    println(word+ " is searching for: "+_in);
+    int test = 0;
+search:
     for(Object tmp: nodes){
       Node n = (Node)tmp; 
       if(n.word.equals(_in)){
-        next.add(n);
-        println(word+" -> "+n.word);
+        test = nodes.indexOf(n);
+        Node newNode = (Node)nodes.get(test);
+        next.add(newNode);
+        break search;
       }
     }
   }
@@ -128,6 +122,6 @@ class Node{
       print(n.word+", ");
 
     }
-    println();
+    println(next.size());
   }
 }
