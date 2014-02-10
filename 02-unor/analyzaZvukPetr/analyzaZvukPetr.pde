@@ -15,7 +15,7 @@ int DATA_OFFSET = 5;
 float ZOOM = 30;
 
 void setup(){
-  size(1600,900);
+  size(1600,900,P3D);
 
 
   parse();
@@ -99,13 +99,11 @@ check:
       }
     }
 
-
     if(uzMam){
       k.pridej(tmp);
     }else{
       krivky.add(new Krivka(tmp.parent,tmp));
     }
-
   }
 }
 
@@ -153,10 +151,9 @@ class Krivka{
     for(Object tmp:body){
       Bod b = (Bod)tmp;
       stroke(255,b.vol*200+55);
-      vertex(map(b.time-frameCount/100.0,MIN_TIME,MAX_TIME,0,width*ZOOM),map(b.freq,MIN_FREQ,MAX_FREQ,height/2+300,height/2-300));
+      vertex(map(b.time-frameCount/100.0,MIN_TIME,MAX_TIME,0,width*ZOOM),map(b.freq,MIN_FREQ,MAX_FREQ,height/2+300,height/2-300),map(b.vol,0,1,-300,300));
     }
     endShape();
 
   }
-
 }
