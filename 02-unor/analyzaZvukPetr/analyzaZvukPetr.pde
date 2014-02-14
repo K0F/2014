@@ -1,4 +1,5 @@
 
+//////////////////////////////////
 
 
 String raw[];
@@ -13,6 +14,8 @@ float MIN_FREQ = 999999, MAX_FREQ = 0;
 int DATA_OFFSET = 5;
 
 float ZOOM = 30;
+
+//////////////////////////////////
 
 void setup(){
   size(1600,900,P3D);
@@ -36,10 +39,9 @@ void draw(){
 
 
   }
-
-
 }
 
+//////////////////////////////////
 
 void parse(){
 
@@ -69,6 +71,8 @@ void parse(){
   }
 }
 
+//////////////////////////////////
+
 void udelejKrivky(){
 
   krivky = new ArrayList();
@@ -82,9 +86,6 @@ void udelejKrivky(){
 
     MIN_TIME = min(MIN_TIME,tmp.time);
     MAX_TIME = max(MAX_TIME,tmp.time);
-
-
-
 
     boolean uzMam = false;
 
@@ -107,6 +108,8 @@ check:
   }
 }
 
+//////////////////////////////////
+
 class Bod{
   int parent;
   float freq, vol, time;
@@ -121,6 +124,7 @@ class Bod{
 }
 
 
+//////////////////////////////////
 
 class Krivka{
 
@@ -157,3 +161,6 @@ class Krivka{
 
   }
 }
+
+
+//////////////////////////////////
