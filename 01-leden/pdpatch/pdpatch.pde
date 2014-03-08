@@ -36,7 +36,7 @@ void setup(){
 
 
   size(800,600);
-  textFont(createFont("SempliceRegular",9,false));
+  textFont(loadFont("SempliceRegular-8.vlw"));
   smooth();
    n = new PdReader("test.pd");
   pd = new PureData(this, 44100, 0, 2);

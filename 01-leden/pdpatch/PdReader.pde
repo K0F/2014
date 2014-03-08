@@ -2,9 +2,9 @@ class PdReader{
   String [] pd;
   String filename;
   boolean drag[];
-  
+
   int mainResX,mainResY;
-  
+
   int tempx,tempy;
 
   Objekt o[] = new Objekt[0];  
@@ -21,7 +21,7 @@ class PdReader{
     for(int i = 0;i<drag.length;i++){
       drag[i] = false; 
     }
-    
+
     String[] mainn = splitTokens(pd[0]," ;");
     mainResX = parseInt(mainn[4]);
     mainResY = parseInt(mainn[5]);
@@ -37,15 +37,15 @@ class PdReader{
       String[] tokens = splitTokens(singleline," ;");
       if(tokens.length>1){
         if(tokens[1].equals("obj")||tokens[1].equals("msg")||
-          tokens[1].equals("floatatom")||tokens[1].equals("text")||
-          tokens[1].equals("symbolatom")){
+            tokens[1].equals("floatatom")||tokens[1].equals("text")||
+            tokens[1].equals("symbolatom")){
           int x = parseInt(tokens[2]);
           int y = parseInt(tokens[3]);
           String name = "";
           for(int z = 4 ;z < tokens.length; z++){
-           if(!tokens[z].equals("empty") && !tokens[4].equals("bng"))
-           name += tokens[z]+" ";          
-           }
+            if(!tokens[z].equals("empty") && !tokens[4].equals("bng"))
+              name += tokens[z]+" ";          
+          }
           //println("debug: "+name);
           createObjekt(x,y,name,objCntr);
           objCntr++;
@@ -80,7 +80,7 @@ class PdReader{
     for(int i = 0;i<d.length;i++){
       d[i].draw();    
     }
-    
+
     for(int i = 0;i<o.length;i++){
       o[i].draw();    
     }
@@ -158,13 +158,14 @@ class Drat{
   PdReader parent;
   int father, son, posF, posS;
   float x,y,x2,y2;
+  float l1,l2;
 
   Drat(int _father,int _posF,int _son,int _posS,PdReader _parent){
     parent=_parent;
     father=_father;
     son=_son;
     posF=_posF;
-    posS=_posS;      
+    posS=_posS;
   } 
 
   void setup(){
@@ -172,12 +173,14 @@ class Drat{
     y = parent.o[father].y+10;
     x2 = parent.o[son].x;
     y2 = parent.o[son].y;
+    l1 = parent.o[father].delka;
+    l2 = parent.o[son].delka;
   }
 
   void draw(){
     setup();
     stroke(255,30);
-    line(x,y,x2,y2);
+    line(x+l1*posF-4,y,x2+l2*posS-4,y2);
   }
 
 
