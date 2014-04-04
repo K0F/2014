@@ -16,18 +16,19 @@ void setup(){
 
 
 void draw(){
-  
+  noCursor();
+
   if(frameCount==1)
-  frame.setLocation(0,0);
+    frame.setLocation(0,0);
 
   background(127*(sin(frameCount/300.0)+1.0));
 
   noStroke();
-  for(int i = 0 ; i < 150;i++){
+  for(int i = 0 ; i < 75;i++){
     pushMatrix();
     translate(width/2+(noise(((frameCount+i*10)-.5)/311.1))*(width/2-150/2),height/2);
 
-    rotate((frameCount+i*10)/100.0);
+    rotate((frameCount+i*3.0)/10.0);
 
     fill(i%2==0?255:0,180);
 
