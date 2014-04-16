@@ -142,6 +142,7 @@ class Machine {
     rect(width-pos.x, pos.y, 3, 3);
     popMatrix();
     float d = dist(pos.x, pos.y, lpos.x, lpos.y);
+
     if (d<=100) {
 
       _platno.beginDraw();
@@ -178,10 +179,12 @@ class Machine {
       current += machines.indexOf(this);//(int)random(generators.size());
     /*
        if(current>=generators.size()){ 
-     int overlap = current-generators.size();
-     current = overlap%(generators.size()-1);
-     }
+       int overlap = current-generators.size();
+       current = overlap%(generators.size()-1);
+       }
      */
+
+
     current %= (generators.size());
 
     for (int i = 0 ; i < curr.matrix.length;i++) {
@@ -195,13 +198,14 @@ class Machine {
     dir.mult(speed);
     /*
        PVector target = new PVector(dir.x,dir.y);
-     target.mult(cycle);
-     target.add(pos);
-     
-     
-     smx += (target.x-smx)/SMOOTHING;
-     smy += (target.y-smy)/SMOOTHING;
+       target.mult(cycle);
+       target.add(pos);
+
+
+       smx += (target.x-smx)/SMOOTHING;
+       smy += (target.y-smy)/SMOOTHING;
      */
+
     pos.add(dir);
 
 
@@ -234,9 +238,9 @@ class Machine {
 
     /*
        if(pos.x>width){pos.x=width;dir.x*=-1.0;}
-     if(pos.x<0){pos.x=0;dir.x*=-1.0;}
-     if(pos.y>height){pos.y=height;dir.y*=-1.0;}
-     if(pos.y<0){pos.y=0;dir.y*=-1.0;}
+       if(pos.x<0){pos.x=0;dir.x*=-1.0;}
+       if(pos.y>height){pos.y=height;dir.y*=-1.0;}
+       if(pos.y<0){pos.y=0;dir.y*=-1.0;}
      */
     float d = dist(pos.x, pos.y, width/2, height/2);
 
@@ -247,11 +251,11 @@ class Machine {
       pos.y = sin(theta)*BORDER+height/2;
     }
     /*
-     if()
-     if(pos.x>width-BORDER)pos.x=BORDER;
-     if(pos.x<BORDER)pos.x=width-BORDER;
-     if(pos.y>height-BORDER)pos.y=BORDER;
-     if(pos.y<BORDER)pos.y=height-BORDER;
+       if()
+       if(pos.x>width-BORDER)pos.x=BORDER;
+       if(pos.x<BORDER)pos.x=width-BORDER;
+       if(pos.y>height-BORDER)pos.y=BORDER;
+       if(pos.y<BORDER)pos.y=height-BORDER;
      */
   }
 }

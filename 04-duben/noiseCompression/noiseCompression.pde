@@ -15,10 +15,7 @@ void draw(){
 
   background(0);
   nb.draw();
-
 }
-
-
 
 
 
