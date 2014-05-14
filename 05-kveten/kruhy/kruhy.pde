@@ -30,20 +30,24 @@ float L[];
 int MEM_SIZE = 1000;
 
 ArrayList mem;
-ArrayList graph;
+ArrayList graph1, graph2;
 
 void setup(){
 
-  size(1000,512);
+  size(1000,512,P2D);
+
+smooth();
+
   rots = new float[num];
   L = new float[num];
   speeds = new float[num];
 
   mem = new ArrayList();
-  graph = new ArrayList();
+  graph1 = new ArrayList();
+  graph2 = new ArrayList();
 
   for(int i = 0 ; i < num;i++){
-    speeds[i] = (random(-PI,PI))/100.0;
+    speeds[i] = (random(-PI,PI))/60.0;
     L[i] = random(5,20);
     rots[i] = 0;
   }
@@ -61,6 +65,8 @@ void draw(){
     rots[i] += speeds[i];
   }
 
+  pushMatrix();
+
   translate(width/2,height/2);
 
   for(int i = 0 ; i < num;i++){
@@ -71,34 +77,48 @@ void draw(){
 
     if(i==num-1){
       mem.add(new PVector(screenX(0,0),screenY(0,0)));
-      graph.add(new PVector(frameCount%width,screenY(0,0)));
+      graph1.add(new PVector(frameCount%width,screenY(0,0)));
+      graph2.add(new PVector(frameCount%width,screenX(0,0)/(width/(height+0.0))));
     }
   }
 
   if(mem.size()>MEM_SIZE){
     mem.remove(0);
-    graph.remove(0);
+    graph1.remove(0);
+    graph2.remove(0);
   }
 
   noFill();
 
-  resetMatrix();
+  popMatrix();
 
-  beginShape();
-  for(int i = 0 ; i < mem.size();i++){
-    stroke(255,map(i,0,mem.size(),0,255));
+  for(int i = 1 ; i < mem.size();i++){
+    stroke(#ffffff,map(i,0,mem.size(),0,255));
     PVector tmp = (PVector)mem.get(i);
+    PVector tmpp = (PVector)mem.get(i-1);
 
-    vertex(tmp.x,tmp.y);
+    line(tmp.x,tmp.y,tmpp.x,tmpp.y);
   }
-  endShape();
 
-  beginShape();
-  for(int i = 0 ; i < mem.size();i++){
+  for(int i = 1 ; i < mem.size();i++){
     stroke(#ffcc00,map(i,0,mem.size(),0,255));
-    PVector tmp = (PVector)graph.get(i);
+    PVector tmp = (PVector)graph1.get(i);
+    PVector tmpp = (PVector)graph1.get(i-1);
 
-    vertex(tmp.x,tmp.y);
+    float d = dist(tmp.x,tmp.y,tmpp.x,tmpp.y);
+
+    if(d<50) 
+      line(tmp.x,tmp.y,tmpp.x,tmpp.y);
   }
-  endShape();
+
+  for(int i = 1 ; i < mem.size();i++){
+    stroke(#ff0000,map(i,0,mem.size(),0,255));
+    PVector tmp = (PVector)graph2.get(i);
+    PVector tmpp = (PVector)graph2.get(i-1);
+
+    float d = dist(tmp.x,tmp.y,tmpp.x,tmpp.y);
+
+    if(d<50) 
+      line(tmp.x,tmp.y,tmpp.x,tmpp.y);
+  }
 }
