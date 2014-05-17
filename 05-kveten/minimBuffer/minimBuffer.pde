@@ -13,7 +13,7 @@ Sampler sampler;
 
 
 
-int num = 10;
+int num = 20;
 
 float rots[];
 float speeds[];
@@ -27,13 +27,11 @@ ArrayList graph1, graph2;
 
 float freq = 512;
 
-
-
 void setup(){
 
-  size(1024,512,P2D);
+  size(720,512);
 
-  smooth();
+  noSmooth();
 
   rots = new float[num];
   L = new float[num];
@@ -45,7 +43,7 @@ void setup(){
 
   for(int i = 0 ; i < num;i++){
     speeds[i] = (random(-PI,PI))/100.0;
-    L[i] = random(10,80);
+    L[i] = random(10,20);
     rots[i] = 0;
   }
 
@@ -59,21 +57,25 @@ void setup(){
     buffer.setSample(0,i,sin(i/2.0));
   }
 
-  sampler = new Sampler(buffer,44100,1);
+  sampler = new Sampler(buffer,44100,2);
   sampler.patch( output );
   sampler.looping = true;
   sampler.trigger(); 
-
-
 }
 
 
 void draw(){
+  
+  // beast control
+  for(int i = 0 ; i < num;i++){
+    L[i] += (((noise(i/100.0+frameCount/1000.0)-0.5) * 150.0 )-L[i])/100.0;
+    
+  }
 
   background(0);
 
         //
-                freq = mouseX + 1;
+                freq += ((mouseX + 10)-freq) / 10.0;
         //
 
   stroke(255);
@@ -84,11 +86,16 @@ void draw(){
 
   pushMatrix();
 
+  
+    strokeWeight(2);
+    stroke(#ffcc00);
+
   translate(width/2,height/2);
 
   for(int i = 0 ; i < num;i++){
 
     rotate(rots[i]);
+    
     line(L[i],0,0,0);
     translate(L[i],0);
 
@@ -104,18 +111,23 @@ void draw(){
     graph1.remove(0);
     graph2.remove(0);
   }
+  
+  strokeWeight(1);
 
   noFill();
 
   popMatrix();
 
+
+
   for(int i = 1 ; i < mem.size();i++){
-    stroke(#ffffff,map(i,0,mem.size(),0,120));
+    stroke(#ffcc00,map(i,0,mem.size(),0,120));
     PVector tmp = (PVector)mem.get(i);
     PVector tmpp = (PVector)mem.get(i-1);
 
     line(tmp.x,tmp.y,tmpp.x,tmpp.y);
   }
+/*
 
   for(int i = 1 ; i < mem.size();i++){
     stroke(#ffcc00,map(i,0,mem.size(),0,90));
@@ -127,7 +139,6 @@ void draw(){
     if(d<50) 
       line(tmp.x,tmp.y,tmpp.x,tmpp.y);
   }
-
   for(int i = 1 ; i < mem.size();i++){
     stroke(#ff0000,map(i,0,mem.size(),0,90));
     PVector tmp = (PVector)graph2.get(i);
@@ -138,6 +149,7 @@ void draw(){
     if(d<50) 
       line(tmp.x,tmp.y,tmpp.x,tmpp.y);
   }
+*/
 
   stroke(255,120);
 
@@ -148,17 +160,37 @@ void draw(){
 
     PVector g1 = (PVector)graph1.get( round(((sin( (i)/freq )+1.0)/2.0)*(mem.size()-1.0)) );
     PVector g2 = (PVector)graph2.get( round(((sin( (i)/freq )+1.0)/2.0)*(mem.size()-1.0)) ) ;
-    float y = 2.0 *  map(g1.y,0,height,-1,1) * map(g2.y,0,height,-1,1);
-    float py = 2.0 *  map(pg1.y,0,height,-1,1) * map(pg2.y,0,height,-1,1);
+    
+    float fade = frameCount<120?map(frameCount,0,120,0,1):1.0;
+    
+    float y1 =   map(g1.y,0,height,-1,1) * fade;
+    float y2 =   map(g2.y,0,height,-1,1) * fade;
 
-    buffer.setSample(0,i,y);
 
+    float py1 =  map(pg1.y,0,height,-1,1) * fade;
+    float py2 =  map(pg2.y,0,height,-1,1) * fade;
+
+
+    buffer.setSample(0,i,y1);
+    buffer.setSample(1,i,y2);
+    
+    stroke(255);
+    
     line(
         map(i-1,0,BUFFER_SIZE*2,0,width),
-        map(py,-1,1,height,0),
+        map(py1,-1,1,height,0),
         map(i,0,BUFFER_SIZE*2,0,width),
-        map(y,-1,1,height,0)
+        map(y1,-1,1,height,0)
         );
+        
+        
+    line(
+        map(i-1,0,BUFFER_SIZE*2,0,width),
+        map(py2,-1,1,height,0),
+        map(i,0,BUFFER_SIZE*2,0,width),
+        map(y2,-1,1,height,0)
+        );
+        
   }
 
 }
