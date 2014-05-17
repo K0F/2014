@@ -30,7 +30,7 @@ void setup(){
   frameRate(120);
 
   noSmooth();
-  
+
   graph1 = new float[BUFFER_SIZE];
   graph2 = new float[BUFFER_SIZE];
 
@@ -63,15 +63,23 @@ void draw(){
 
   background(0);
 
-  float f = noise(millis()/10000.0) * noise(millis()/1000.0) * 200.0;
+  float f = noise(millis()/10000.0) * noise(millis()/1000.0) * 80.0;
+
 
   for(int i = 0 ; i < BUFFER_SIZE ; i++){
+    graph1[i] *= 0.999;
+    graph2[i] *= 0.999;
 
-   graph1[i] += (sin(((i+frameCount)%BUFFER_SIZE)/(f))-graph1[i])/(noise(millis()/1000.0+millis()/10001.0)*100.0);
+
+    graph1[i] = constrain(graph1[i],-1,1);
+    graph2[i] = constrain(graph1[i],-1,1);
+
+    graph1[i] += (sin(((i+frameCount)%BUFFER_SIZE)/(f))-graph1[i])/(noise(millis()/101.0+millis()/10001.0)*(mouseX+1.0));
     buffer.setSample(0,i,graph1[i]);
 
-   graph2[i] += (cos(((i+frameCount)%BUFFER_SIZE)/(f))-graph2[i])/(noise(millis()/1000.0+millis()/10000.0)*100.0);
+    graph2[i] += (cos(((i+frameCount)%BUFFER_SIZE)/(f))-graph2[i])/(noise(millis()/101.0+millis()/10021.0)*(mouseY+1.0));
     buffer.setSample(1,i,graph2[i]);
+
   }
 
 
