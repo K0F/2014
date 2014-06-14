@@ -7,7 +7,7 @@ void init(){
 }
 
 void setup(){
-  size(1024,768,OPENGL);
+  size(640,480,OPENGL);
   colorMode(HSB);
 }
 
