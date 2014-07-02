@@ -57,7 +57,7 @@ void setup(){
   sampler.trigger();
 }
 
-int cntr =0 ;
+int cntr = 0;
 
 void draw(){
 
