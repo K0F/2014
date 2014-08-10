@@ -1,7 +1,8 @@
 
 int ID = 0;
-int STEP_SIZE = 4;
-int X = STEP_SIZE, Y=STEP_SIZE;
+int STEP_SIZE = 2;
+int border = 100;
+int X = STEP_SIZE+border, Y=STEP_SIZE+border;
 ArrayList nodes;
 
 void setup(){
@@ -10,14 +11,14 @@ void setup(){
 
   nodes = new ArrayList();
 
-  while(Y < height-STEP_SIZE || X < width-STEP_SIZE){
+  while(Y < height-STEP_SIZE-border || X < width-STEP_SIZE-border){
 
     nodes.add(new Node());
 
     X+=STEP_SIZE;
 
-    if(X>width-STEP_SIZE){
-      X = STEP_SIZE;
+    if(X>width-STEP_SIZE-border){
+      X = STEP_SIZE+border;
       Y += STEP_SIZE;
     }
   }
@@ -121,9 +122,12 @@ mostD = (int)(random(links.size()));
       float w = (Float)weights.get(i);
 
       sum += w * n.energy;
-      one += (three-one)/2000.0;
-      two += (one-two)/200.0;
-      three += (two-three)/20.0;
+
+      one += ((three+n.energy/100.0)-one)/200.0;
+      two += (one-two)/20.0;
+      three += (two-three)/2.0;
+
+      weights.set(i,w*(1/abs(n.energy-energy)));
     }
 
     sum /= (links.size()+0.0f);
