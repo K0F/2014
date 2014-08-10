@@ -123,7 +123,7 @@ mostD = (int)(random(links.size()));
 
       sum += w * n.energy;
 
-      one += ((three+(n.energy*5.0))-one)/20.0;
+      one += ((three+(n.energy*4.0))-one)/20.0;
       two += (one-two)/20.0;
       three += (two-three)/20.0;
 
@@ -135,10 +135,10 @@ mostD = (int)(random(links.size()));
     
     sum = n.energy;
     next_energy += (exp(-sum*one)*two-energy)/(three);
-   /* 
+    /*
     if(dist(pos.x,pos.y,mouseX,mouseY)<STEP_SIZE) 
       next_energy = (sin(frameCount/10.0)+1.0);
-*/
+    */
     //next_energy += random(-1000,1000)/100.0;
   }
 
