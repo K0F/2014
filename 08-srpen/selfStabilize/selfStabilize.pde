@@ -1,12 +1,12 @@
 
 int ID = 0;
-int STEP_SIZE = 2;
+int STEP_SIZE = 4;
 int X = STEP_SIZE, Y=STEP_SIZE;
 ArrayList nodes;
 
 void setup(){
 
-  size(200,200,P2D);
+  size(400,400,P2D);
 
   nodes = new ArrayList();
 
@@ -48,6 +48,8 @@ class Node{
   PVector pos;
   float energy,next_energy;
   ArrayList links,weights;
+  
+  float one, two, three;
 
 
   Node(){
@@ -56,6 +58,10 @@ class Node{
     next_energy = energy = 0.5;
 
     pos = new PVector(X,Y);
+
+    one = random(10,20);
+    two = random(10,20);
+    three = random(10,20);
   }
 
   void connect(){
@@ -115,18 +121,20 @@ mostD = (int)(random(links.size()));
       float w = (Float)weights.get(i);
 
       sum += w * n.energy;
-
+      one += (three-one)/2000.0;
+      two += (one-two)/200.0;
+      three += (two-three)/20.0;
     }
 
     sum /= (links.size()+0.0f);
     Node n = (Node)links.get(mostD);
     
     sum = n.energy;
-    next_energy += (exp(-sum*200.0)*35.0-energy)/(3.5*2.0);
-    
+    next_energy += (exp(-sum*one)*two-energy)/(three);
+   /* 
     if(dist(pos.x,pos.y,mouseX,mouseY)<STEP_SIZE) 
       next_energy = (sin(frameCount/10.0)+1.0);
-
+*/
     //next_energy += random(-1000,1000)/100.0;
   }
 
