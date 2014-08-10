@@ -60,9 +60,9 @@ class Node{
 
     pos = new PVector(X,Y);
 
-    one = random(10,20);
-    two = random(10,20);
-    three = random(10,20);
+    one = random(19,20);
+    two = random(19,20);
+    three = random(19,20);
   }
 
   void connect(){
@@ -123,9 +123,9 @@ mostD = (int)(random(links.size()));
 
       sum += w * n.energy;
 
-      one += ((three+n.energy/100.0)-one)/200.0;
+      one += ((three+(n.energy*5.0))-one)/20.0;
       two += (one-two)/20.0;
-      three += (two-three)/2.0;
+      three += (two-three)/20.0;
 
       weights.set(i,w*(1/abs(n.energy-energy)));
     }
