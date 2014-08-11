@@ -2,7 +2,7 @@
 Entity e;
 
 void setup(){
-  size(800,600);
+  size(800,400);
   e = new Entity();
 }
 
@@ -33,7 +33,7 @@ class Entity{
   void move(){
 
     pos.add(vel);
-    vel = new PVector(1/sin((target.x-pos.x)/(width/2.0)),1/sin((target.y-pos.y)/(height/2.0)));
+    vel = new PVector(1.0/(cos(pos.y/(height+0.0)*PI-HALF_PI)) * (target.x-pos.x),(target.y-pos.y));
     vel.normalize();
     vel.mult(speed);
 
