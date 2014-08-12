@@ -1,6 +1,6 @@
 
 int ID = 0;
-int STEP_SIZE = 2;
+int STEP_SIZE = 4;
 int border = 100;
 int X = STEP_SIZE+border, Y=STEP_SIZE+border;
 ArrayList nodes;
@@ -123,7 +123,7 @@ mostD = (int)(random(links.size()));
 
       sum += w * n.energy;
 
-      one += ((three+(n.energy*4.0))-one)/20.0;
+      one += (n.energy*20.0-one)/20.0;
       two += (one-two)/20.0;
       three += (two-three)/20.0;
 
