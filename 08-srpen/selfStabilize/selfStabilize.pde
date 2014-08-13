@@ -1,6 +1,6 @@
 
 int ID = 0;
-int STEP_SIZE = 4;
+int STEP_SIZE = 2;
 int border = 100;
 int X = STEP_SIZE+border, Y=STEP_SIZE+border;
 ArrayList nodes;
