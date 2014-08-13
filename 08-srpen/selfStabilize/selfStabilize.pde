@@ -1,7 +1,7 @@
 
 int ID = 0;
-int STEP_SIZE = 2;
-int border = 150;
+int STEP_SIZE = 1;
+int border = 180;
 int X = STEP_SIZE+border, Y=STEP_SIZE+border;
 ArrayList nodes;
 
