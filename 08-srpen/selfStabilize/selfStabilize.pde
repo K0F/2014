@@ -1,4 +1,3 @@
-
 int ID = 0;
 int STEP_SIZE = 2;
 int border = 150;
@@ -6,15 +5,11 @@ int X = STEP_SIZE+border, Y=STEP_SIZE+border;
 ArrayList nodes;
 
 void setup(){
-
   size(400,400,P2D);
-
   nodes = new ArrayList();
-
+  
   while(Y < height-STEP_SIZE-border || X < width-STEP_SIZE-border){
-
     nodes.add(new Node());
-
     X+=STEP_SIZE;
 
     if(X>width-STEP_SIZE-border){
@@ -27,44 +22,33 @@ void setup(){
     Node tmp = (Node)o;
     tmp.connect();
   }
-
 }
 
-
-
 void draw(){
-
   background(0);
-
   for(Object o:nodes){
     Node tmp = (Node)o;
     tmp.plot();
   }
-
 }
 
 class Node{
-
   int id;
   PVector pos;
   float energy,next_energy;
   ArrayList links,weights;
-  
   float one, two, three;
-
 
   Node(){
     id = ID;
     ID++;
     next_energy = energy = 0.5;
-
     pos = new PVector(X,Y);
-
     one = random(19,20);
     two = random(19,20);
     three = random(19,20);
   }
-
+  
   void connect(){
     weights = new ArrayList();
     links = new ArrayList();
