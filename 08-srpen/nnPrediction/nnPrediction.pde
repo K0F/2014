@@ -5,12 +5,12 @@ Pattern pattern;
 int side = 64;
 
 int NUM_NEURONS = side*side;
-int numC = 100;
+int numC = 2;
 int NUM_INPUTS = side-1;
 
 int SHIFT = 0;
 
-float L_SPEED = 200.0;
+float L_SPEED = side;
 
 void setup(){
 
@@ -37,6 +37,7 @@ void draw(){
 
   background(0);
 
+  if(frameCount%10==0)
   SHIFT++;
 
   if(SHIFT>width-NUM_INPUTS-1)
@@ -59,7 +60,6 @@ void draw(){
     n.backprop(mean_error);
   }
 
-
   pattern.results[SHIFT] = last.val;
 
   translate(SHIFT,0);
@@ -67,8 +67,6 @@ void draw(){
     Neuron n = (Neuron)neurons.get(i);
     n.plot(i);
   }
-
-
 }
 
 void inputVals(int shift){
@@ -98,8 +96,6 @@ class Pattern{
       line(i,results[i]*height,i-1,results[i-1]*height);
     }
   }
-
-
 }
 
 class Neuron{
@@ -139,17 +135,13 @@ class Neuron{
     }
 
     sum /= cntr;
-
-
     nextVal = sum;
-
-
   }
 
   void backprop(float err){
     for(int i = 0;  i < connections.size(); i++){
         Connection c = (Connection)connections.get(i);
-        c.w += (1.1-pow(err,2))/L_SPEED;
+        c.w += (1.5-abs(err))/L_SPEED;
     }
   }
 
@@ -169,7 +161,4 @@ class Connection{
     B = _B;
     id=ID++;
   }
-
-
-
 }
