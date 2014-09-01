@@ -41,31 +41,27 @@ class User{
     println(username);
   }
 
-  int findout(){
+  void findout(){
     boolean got = false;
 
-    int id = users.indexOf(this);
-    int aid = users.indexOf(this);
+   int me = users.indexOf(this);
 check:
     for(int i = 0 ; i < users.size();i++){
       User u = (User)users.get(i);
 
       if(i!=users.indexOf(this) && u.username.equals(username)){
-        aid = i;        
         got = true;
-        println("hit");
+        me = i;
         break check;
       }
-
     }
 
     if(got){
       println("removing duplicate "+username);
-      users.remove(users.indexOf(aid));
-      return aid;
+      //this = (User)users.get(me);
+      users.remove(this);
     }
 
-    return id;
 
 
 
@@ -85,7 +81,6 @@ class Post{
 
   Post(String _time,String _author,String _msg){
     author = new User(_author);
-    author = (User)users.get(author.findout());
     time = _time;
     text = _msg;
 
