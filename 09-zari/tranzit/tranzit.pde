@@ -90,11 +90,23 @@ void draw(){
     float g = (sin((frameCount*i)/330.0)+1.0)*127.0 ;
     float b = (sin((frameCount*i)/370.0)+1.0)*127.0 ;
 
-    //L
-    image(faze1[i],0,22,w/2,h-50);
+    if(val>=s1.length){
+      //L
+      image(faze1[i],0,22,w/2,h-50);
 
-    //R
-    image(faze2[i],w/2,0,w/2,h);
+      //R
+      image(faze2[i],w/2,0,w/2,h);
+
+
+    }else{
+      //L
+      image(faze1[i],0,22,w/2,h-50);
+
+      //R
+      image(faze2[i],w/2,0,w/2,h);
+
+    }
+
   }
   rcv = false;
 }
