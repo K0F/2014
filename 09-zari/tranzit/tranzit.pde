@@ -105,7 +105,7 @@ void oscEvent(OscMessage theOscMessage) {
       int firstValue = theOscMessage.get(0).intValue();
       add(firstValue);
       rcv = true;
-      print("### received an osc message /matous with typetag i.");
+      print("### received an osc message /signal with typetag i.");
       println(" values: "+firstValue);
       return;
     }  
