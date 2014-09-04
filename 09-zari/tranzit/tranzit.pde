@@ -16,7 +16,7 @@ String s2[] = {"2_I.png","2_T.png","2_V.png","2_E.png","2_B.png","2_R.png","2_S.
 
 PImage src;
 
-int val = 0;
+int val = 5;
 
 PImage[] faze1,faze2;
 
@@ -27,10 +27,13 @@ boolean rcv = false;
 
 void setup(){
 
+
+  
   size(800*2,600,P2D);
   oscP5 = new OscP5(this,12000);
   faze1 = new PImage[s1.length];
   faze2 = new PImage[s2.length];
+  noCursor();
 
   for(int i = 0 ; i < s1.length;i++){
     faze1[i] = loadImage("all/BW/"+s1[i]);
@@ -48,7 +51,7 @@ void keyPressed(){
   if(keyCode==LEFT){
     val--;
     if(val<0)
-      val = faze1.length-1;
+      val = faze1.length;
   }
 }
 
@@ -85,18 +88,24 @@ void draw(){
 
   background(0);
 
+  if(val==0){
+  fill(255);
+  rect(800,0,800,500);
+  }
   for(int i = 0; i < val;i++){
-    float r = (sin((frameCount*i)/300.0)+1.0)*127.0 ;
-    float g = (sin((frameCount*i)/330.0)+1.0)*127.0 ;
-    float b = (sin((frameCount*i)/370.0)+1.0)*127.0 ;
+    float r = (sin((frameCount)/300.0)+1.0)*127.0 ;
+    float g = (sin((frameCount*i)/3.0)+1.0)*127.0 ;
+    float b = (sin((frameCount*i)/3.0)+1.0)*127.0 ;
 
     if(val>=s1.length){
       //L
+      tint(r);
       image(faze1[i],0,22,w/2,h-50);
 
       //R
       image(faze2[i],w/2,0,w/2,h);
 
+      noTint();
 
     }else{
       //L
@@ -104,9 +113,7 @@ void draw(){
 
       //R
       image(faze2[i],w/2,0,w/2,h);
-
     }
-
   }
   rcv = false;
 }
@@ -122,5 +129,12 @@ void oscEvent(OscMessage theOscMessage) {
       return;
     }  
   } 
-  println("got msg");
+  println(theOscMessage.toString());
+    if(theOscMessage.checkTypetag("ssi")) {
+  int firstValue = theOscMessage.get(2).intValue();
+      add(firstValue);
+      rcv = true;
+      print("### received an osc message /signal with typetag ssi.");
+     
+    }
 }
