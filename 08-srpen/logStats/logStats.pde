@@ -8,10 +8,23 @@ void setup(){
 
   size(800,900);
 
-  textFont(createFont("Semplice Regular",9));
+  textFont(createFont("Semplice Regular",8));
 
   users = new ArrayList();
   lib = new Library();
+
+
+  try{
+  for(Object o:users)
+  {
+    User u = (User)o;
+    u.findout();
+
+  }
+  }catch(Exception e){
+  println(e);}
+
+ 
 
 }
 
@@ -35,41 +48,35 @@ void draw(){
 
 class User{
   String username;
+  Post parent;
 
-  User(String _username){
+  User(String _username,Post _parent){
     username = _username+"";
-    println(username);
+    parent = _parent;
   }
 
   void findout(){
     boolean got = false;
+    int who = 0;
 
-   int me = users.indexOf(this);
 check:
     for(int i = 0 ; i < users.size();i++){
       User u = (User)users.get(i);
-
-      if(i!=users.indexOf(this) && u.username.equals(username)){
+      
+      if(u.username.indexOf(username)>-1 && users.indexOf(this)!=i){
         got = true;
-        me = i;
+        parent.author = u;
         break check;
       }
     }
 
     if(got){
-      println("removing duplicate "+username);
-      //this = (User)users.get(me);
       users.remove(this);
     }
-
-
-
-
-
   }
 
   void plot(int _y){
-    text(username,10,_y);
+    text(username+" "+users.indexOf(this),10,_y);
   }
 
 }
@@ -80,7 +87,8 @@ class Post{
   String text;
 
   Post(String _time,String _author,String _msg){
-    author = new User(_author);
+    author = new User(_author,this);
+    users.add((User)author);
     time = _time;
     text = _msg;
 
@@ -131,7 +139,7 @@ class Library{
     for(int i = 0 ;i < raw.size();i++){
       String ln = (String)raw.get(i);
       if(ln.indexOf("|")>-1){
-        String prs[] = splitTokens(ln,"| ");
+        String prs[] = splitTokens(ln,"| \t");
         String msg = "";
         for(int ii = 2;ii<prs.length;ii++){
           msg+=prs[ii]+" ";
