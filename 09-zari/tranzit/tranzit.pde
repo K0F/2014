@@ -16,7 +16,7 @@ String s2[] = {"2_I.png","2_T.png","2_V.png","2_E.png","2_B.png","2_R.png","2_S.
 
 PImage src;
 
-int val = 5;
+int val = 0;
 
 PImage[] faze1,faze2;
 
@@ -79,40 +79,31 @@ void draw(){
   if(frameCount==1)
     frame.setLocation(0,0);
 
-  if(rcv)
-  {
-    noStroke();
-    fill(255,0,0);
-    rect(10,10,10,10);
-  }
 
   background(0);
 
   if(val==0){
   fill(255);
   rect(800,0,800,500);
+  }else if(val==11){
+  fill(255);
+  rect(800,0,800,500);
+  //rect(0,20,800,460);
   }
   for(int i = 0; i < val;i++){
     float r = (sin((frameCount)/300.0)+1.0)*127.0 ;
     float g = (sin((frameCount*i)/3.0)+1.0)*127.0 ;
     float b = (sin((frameCount*i)/3.0)+1.0)*127.0 ;
 
-    if(val>=s1.length){
+    if(val<s1.length){
+
+      float WIDTH = mouseX;
+
       //L
-      tint(r);
-      image(faze1[i],0,22,w/2,h-50);
+      image(faze1[i],0+WIDTH/2,22,w/2-WIDTH/2,h-50);
 
       //R
-      image(faze2[i],w/2,0,w/2,h);
-
-      noTint();
-
-    }else{
-      //L
-      image(faze1[i],0,22,w/2,h-50);
-
-      //R
-      image(faze2[i],w/2,0,w/2,h);
+      image(faze2[i],w/2+WIDTH/2,0,w/2-WIDTH/2,h);
     }
   }
   rcv = false;
