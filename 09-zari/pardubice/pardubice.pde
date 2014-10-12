@@ -62,7 +62,7 @@ float glob_speed = 3.0;
 float R = 40.0;
 
 
-boolean rec = false;
+boolean rec = true;
 
 boolean attract = true;
 float attract_force =5000.0;
@@ -143,7 +143,7 @@ void draw(){
   image(fram,0,0);
 
   if(rec)
-    saveFrame("/home/kof/render/flys/fr#####.png");
+    saveFrame("/home/kof/render/pardubice/fr#####.png");
 
 }
 class Node{
