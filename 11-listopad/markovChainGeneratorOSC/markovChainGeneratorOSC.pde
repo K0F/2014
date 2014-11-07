@@ -36,7 +36,9 @@ String result = "";
 
 void setup(){
 
-  size(1600,900,P2D);
+  size(1280,720,P2D);
+
+  randomSeed(19);
 
   font = createFont("Semplice Regular",8,false);
   textFont(font);
@@ -189,7 +191,7 @@ class Node{
   void sendSignal(Node n){
     result += information;
 
-    KADENCE = (int)map(mouseX,0,width,1,250);//(int)map((int)((char)information.charAt(0)),65,90,2,30);
+    KADENCE = (int)map((int)((char)information.charAt(0)),65,90,2,30);
 
     synth.set("amp",random(10,20)/100.0);
     synth.set("val",(int)((char)information.charAt(0)));
