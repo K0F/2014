@@ -2,13 +2,15 @@ import java.io.*;
 
 void setup(){
 
-  //    runCmd("sclang "+sketchPath+"/boot.scd");
-  //    runCmd("echo -E '{Splay.ar(SinOsc.ar(220))}).play' /tmp/lang | sclang");
-
-  execute("sclang "+sketchPath+"/boot.scd");
-
+ 
+  execute(sketchPath+"/boot.sh");
+  delay(7000);
+  sclang("s = Server.local;s.boot;Server.internal=s;Server.default=s;Server.local=s;");
 }
 
+void mousePressed(){
+  sclang("Ndef(\"a\",{SinOsc.ar([220,220.1])}).play;");
+}
 
 void draw(){
 
@@ -36,7 +38,10 @@ class Executer implements Runnable{
     try{
 
       Runtime runtime = Runtime.getRuntime();
-      Process p = runtime.exec(command);
+
+      String cmd[] = {"/bin/sh","-c",command};
+
+      Process p = runtime.exec(cmd);
 
       BufferedReader stdInput = new BufferedReader(new
           InputStreamReader(p.getInputStream()));
@@ -56,17 +61,11 @@ class Executer implements Runnable{
         System.out.println(s);
       }
 
-      System.exit(0);
     }
     catch (IOException e) {
       System.out.println("exception happened - here's what I know: ");
       e.printStackTrace();
-      System.exit(-1);
     }
-
-
-
-
   }
 }
 
@@ -74,7 +73,9 @@ void execute(String _in){
   Runnable runnable = new Executer(_in);
   Thread thread = new Thread(runnable);
   thread.start();
-
 }
 
+void sclang(String _in){
+ execute("echo '"+_in+"' > /tmp/lang");
+}
 
