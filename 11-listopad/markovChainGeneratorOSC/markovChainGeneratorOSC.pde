@@ -1,3 +1,22 @@
+/*
+   (
+   SynthDef(\sine, { |outbus = 0, amp = 0.5, freq = 440, freq2 = 440, val = 63, pan = 0|
+   var data,env,efx;
+   env = EnvGen.ar(Env([0,1,0],[0.03,1.133],[3,-3,3]),doneAction:2);
+   freq = Lag.kr(freq, 0.01);
+   data = SinOsc.ar((freq*freq2/1pi)*env, {ExpRand()}!2, amp) * 
+   SinOsc.ar((val-63)*0.125pi) * env;
+   efx = GVerb.ar(data,2,2,mul:0.15,add:data);
+   Out.ar(outbus, Pan2.ar(efx, pan));
+   }).store;
+   )
+ */
+
+
+
+
+
+
 import supercollider.*;
 import oscP5.*;
 import netP5.*;
