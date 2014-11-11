@@ -21,7 +21,6 @@ import supercollider.*;
 import oscP5.*;
 import netP5.*;
 
-
 Synth synth;
 
 Graph graph;
@@ -33,10 +32,12 @@ int FADEOUT = 60;
 
 String result = "";
 
+boolean RENDER = true;
 
 void setup(){
 
-  size(1280,720,P2D);
+  
+  size(1280,720,RENDER?JAVA2D:P2D);
 
   randomSeed(19);
 
@@ -48,6 +49,7 @@ void setup(){
   graph = new Graph(NUM_NODES);
   synth = new Synth("sine");
 
+  
 }
 
 
@@ -69,6 +71,12 @@ void draw(){
   if(result.length()>200)
     result = result.substring(1,result.length());
 
+  if(RENDER)
+    saveFrame("/home/kof/render/markovSystem/fr#####.png");
+
+  if(frameCount>=5000){
+    exit();
+  }
 }
 
 void mousePressed(){
