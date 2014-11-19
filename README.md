@@ -12,6 +12,7 @@ There is a kind of selection hosted on [Open Processing](http://www.openprocessi
 
 Other way of on-line presentation is quite heavily re-compressed (h264) videos, they are more widely accepted due to more "standard media form". The most of these outputs are available on [Vimeo](https://vimeo.com/kof/videos).
 
+
 ##Archival Code Bits and Pieces
 
 If you really feel like digging, there are more historical *pieces*. To travel back in time in repositories:
@@ -26,6 +27,7 @@ If you really feel like digging, there are more historical *pieces*. To travel b
 
 But please, remember you had been warned, there is plenty of code with very varying *qualities* .. to be more exact, some of programs are complete waste of time to run or even compile ))
 
+Some of the videos and rendered outputs are available @ [YouTube](https://www.youtube.com/user/krystofpesek)
 
 *Enjoy, and feel free to recycle!*
 
