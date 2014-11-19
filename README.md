@@ -27,7 +27,7 @@ If you really feel like digging, there are more historical *pieces*. To travel b
 
 But please, remember you had been warned, there is plenty of code with very varying *qualities* .. to be more exact, some of programs are complete waste of time to run or even compile ))
 
-Some of the videos and rendered outputs are available @ [YouTube](https://www.youtube.com/user/krystofpesek)
+Some of the videos and rendered outputs are available @ [YouTube](https://www.youtube.com/user/krystofpesek), they sould be linked to sources if possible, maybe in some future.
 
 *Enjoy, and feel free to recycle!*
 
