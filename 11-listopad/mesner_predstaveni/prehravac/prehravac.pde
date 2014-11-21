@@ -24,7 +24,7 @@ void init(){
 }
 
 void setup() {
-  size(720,576,P2D);
+  size(768,1024,OPENGL);
   myMovie = new Movie(this, "/home/kof/render/mesner_predstaveni/"+name);
   myMovie.loop();
 
@@ -37,34 +37,41 @@ void setup() {
   input.start();
 }
 
+float H = 150;
+
 void draw() {
+
+
   if(frameCount<5)
     frame.setLocation(0,0);
+  background(0);
 
-  float am = (noise(millis()/100000.0))*255;
+  float am = (noise(millis()/10000.0))*255;
 
-  tint(255,255);
+  tint(255,255-am);
 
   if(flick){
     //if(frameCount%25==0)
     //myMovie.jump(random(seek-5,seek));
-    image(input,0,0);
+
+    input.filter(GRAY);
+    image(input, 50,H+50+sin(millis()/am*1000.0)*am/60.0);
+
+    //blend(a,0,0,width,height,(int)random(-5,5),(int)random(-5,5),width,height,ADD);
+    //blend(a,0,0,width,height,0,0,width,height,MULTIPLY);
   }else{
-    if(frameCount%1==0){
-      translate(0,height);
-      scale(1,-1);
-    }
-    //image(myMovie, 0,sin(millis()/am*1000.0)*am/30.0);
+    image(myMovie, 60,H+sin(millis()/am*1000.0)*am/60.0+80,620,430);
     //fill(0,585);
     //rect(0,0,width,height);
-    blend(myMovie,0,0,width,height,(int)random(-5,5),(int)random(-5,5),width,height,ADD);
-    blend(myMovie,0,0,width,height,0,0,width,height,MULTIPLY);
-  }
-  noTint();
+    //blend(myMovie,0,0,width,height,(int)random(-5,5),(int)random(-5,5),width,height,ADD);
+    //blend(myMovie,0,0,width,height,0,0,width,height,MULTIPLY);
 
-  imageMode(CENTER);
-  image(mask,width/2,height/2);
-  imageMode(CORNER);
+    noTint();
+
+    imageMode(CENTER);
+    image(mask,width/2+random(-1,1),H+random(-1,1));
+    imageMode(CORNER);
+  }
 }
 // Called every time a new frame is available to read
 void movieEvent(Movie m) {
@@ -86,4 +93,5 @@ void keyPressed(){
     seek++;
 
   seek = constrain(seek,5,2000);
+
 }
