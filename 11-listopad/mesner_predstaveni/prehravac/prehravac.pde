@@ -1,14 +1,18 @@
 import processing.video.*;
 import codeanticode.gsvideo.*;
 
-Movie myMovie;
+Movie myMovie[];
 GSCapture input;
 
 PImage mask;
 
 
 
-String name = "VTS_03_2.VOB";
+//String name[] = {"VTS_03_1.VOB","VTS_03_2.VOB","VTS_03_3.VOB"};
+String name[] = {"1.vob","2.vob","3.vob","4.vob","5.vob","6.vob","7.vob","8.vob","9.vob"};
+
+int sel = 0;
+
 float duration = 0;
 
 boolean flick = false;
@@ -24,10 +28,14 @@ void init(){
 }
 
 void setup() {
-  size(768,1024,OPENGL);
-  myMovie = new Movie(this, "/home/kof/render/mesner_predstaveni/"+name);
-  myMovie.loop();
+  size(768,1024);
+  
+  myMovie = new Movie[name.length];
 
+  for(int i = 0 ; i < name.length;i++){
+    myMovie[i] = new Movie(this, "/home/kof/render/mesner_predstaveni/new/"+name[i]);
+    myMovie[i].loop();
+  }
 
   noiseSeed(19);
 
@@ -37,41 +45,44 @@ void setup() {
   input.start();
 }
 
-float H = 150;
+float H = -50;
 
 void draw() {
 
+
+  
+  imageMode(CENTER);
 
   if(frameCount<5)
     frame.setLocation(0,0);
   background(0);
 
   float am = (noise(millis()/10000.0))*255;
+  float am2 = (noise(100000+millis()/10000.0))*255;
+  
+  //tint(255,255);
 
-  tint(255,255-am);
 
   if(flick){
     //if(frameCount%25==0)
     //myMovie.jump(random(seek-5,seek));
 
-    input.filter(GRAY);
-    image(input, 50,H+50+sin(millis()/am*1000.0)*am/60.0);
-
+    image(input, width/2+20, height/2+sin(millis()/am*1000.0)*am/90.0-10+H);
     //blend(a,0,0,width,height,(int)random(-5,5),(int)random(-5,5),width,height,ADD);
-    //blend(a,0,0,width,height,0,0,width,height,MULTIPLY);
   }else{
-    image(myMovie, 60,H+sin(millis()/am*1000.0)*am/60.0+80,620,430);
-    //fill(0,585);
-    //rect(0,0,width,height);
-    //blend(myMovie,0,0,width,height,(int)random(-5,5),(int)random(-5,5),width,height,ADD);
-    //blend(myMovie,0,0,width,height,0,0,width,height,MULTIPLY);
-
-    noTint();
-
-    imageMode(CENTER);
-    image(mask,width/2+random(-1,1),H+random(-1,1));
-    imageMode(CORNER);
+    image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/90.0-10+H,620,430);
   }
+
+  // noTint();
+
+  image(mask,width/2+random(-1,1),height/2+random(-1,1)+H);
+
+  strokeWeight(10);
+  stroke(255);
+  noFill();
+    
+   //image(myMovie2, width/2,height/2+sin(millis()/am2*1000.0)*am2/60.0-10+H+450,620,430);
+ // rect(1,1,width-2,height-2);
 }
 // Called every time a new frame is available to read
 void movieEvent(Movie m) {
@@ -94,4 +105,12 @@ void keyPressed(){
 
   seek = constrain(seek,5,2000);
 
+  println((int)key);
+  if(key > '0' && key < '9')
+  sel = (int)key-49;
+
+ seek = constrain(sel,0,name.length-1);
+  
+
+  println(sel);
 }
