@@ -133,14 +133,14 @@ void draw() {
   fill(255,(sin(frameCount/10.0)+0.5)*127.0);
   rect(0,0,2,2);
 
-  fill(#ff0000,255-tnt);
+  fill(#ff0000,255);
   rect(2,0,2,2);
 
   fill(#00ff00,flick?255:0);
   rect(4,0,2,2);
 
 
-  fill(#0000ff,msk);
+  fill(#ffcc00,255-msk);
   rect(6,0,2,2);
 
 
