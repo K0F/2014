@@ -9,13 +9,15 @@ PImage mask;
 
 
 //String name[] = {"VTS_03_1.VOB","VTS_03_2.VOB","VTS_03_3.VOB"};
-String name[] = {"1.vob","2.vob","8.vob","4.vob","5.vob","6.vob","70.mp4"};
+String name[] = {"1.vob","2.vob","8.vob","4.vob","5.vob","6.vob","sen.mpg"};
 
 int sel = 0;
 
 float duration = 0;
 
-boolean flick = false;
+boolean flick = true;
+boolean fade = false;
+float tnt = 255;
 
 int seek = 5;
 
@@ -63,25 +65,38 @@ void draw() {
 
   //tint(255,255);
 
+  /*
+     if(fade){
+     tnt-=5;
+     }else if(fade && tnt<=5){
+     tnt+=5;
+     }
+   */
 
   if(flick){
-    //if(frameCount%25==0)
-    //myMovie.jump(random(seek-5,seek));
     pushMatrix();
     translate(width/2+20, height/2+sin(millis()/am*1000.0)*am/90.0-10+H);
     rotate(-HALF_PI);
-    //scale(1.5);
+
+
+    // if(tnt<255)
+    // tint(255,tnt);
+
     image(input,0,0,1200,768);
     popMatrix();
     //blend(a,0,0,width,height,(int)random(-5,5),(int)random(-5,5),width,height,ADD);
   }else{
-    image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/90.0-10+H,620,430);
+    //   if(fade)
+    //   tint(255,255-tnt);      
+
+
+    image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/90.0-10+H);
+    image(mask,width/2+random(-1,1),height/2+random(-1,1)+H);
   }
 
   // noTint();
 
-  //image(mask,width/2+random(-1,1),height/2+random(-1,1)+H);
-noStroke();
+  noStroke();
   fill(0);
   rect(0,700,0,width);
   strokeWeight(10);
@@ -119,6 +134,11 @@ void keyPressed(){
   }
   seek = constrain(sel,0,name.length-1);
 
+  if(key=='q')
+    flick = false;
+
+  if(key=='f')
+    fade = !fade;
 
   println(sel);
 }
