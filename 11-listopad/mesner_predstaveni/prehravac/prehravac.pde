@@ -18,7 +18,7 @@ float duration = 0;
 
 boolean flick = true;
 boolean fade = false;
-float tnt = 255;
+float tnt = 0;
 
 int seek = 5;
 
@@ -85,14 +85,21 @@ void draw() {
 
     image(input,0,0,1200,768);
     popMatrix();
+
+    noStroke();
+    fill(0,tnt);
+    rect(0,0,width,height);
     //blend(a,0,0,width,height,(int)random(-5,5),(int)random(-5,5),width,height,ADD);
   }else{
     //   if(fade)
     //   tint(255,255-tnt);      
 
-
-    image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/90.0-10+H);
+    image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/120.0+H);
     image(mask,width/2+random(-1,1),height/2+random(-1,1)+H);
+    noStroke();
+    fill(0,tnt);
+    rect(0,0,width,height);
+
   }
 
   // noTint();
@@ -120,12 +127,20 @@ void keyPressed(){
   if(key==' ')
     flick = !flick;
 
+  if(keyCode==UP)
+    tnt-=5;
+
+  if(keyCode==DOWN)
+    tnt+=5;
+
+  tnt = constrain(tnt,0,255);
+
   if(keyCode==LEFT)
-    {
-  for(int i = 0 ; i < myMovie.length;i++){
-myMovie[i].jump(0);
-}
+  {
+    for(int i = 0 ; i < myMovie.length;i++){
+      myMovie[i].jump(0);
     }
+  }
 
 
 
@@ -134,7 +149,7 @@ myMovie[i].jump(0);
   {
     sel = (int)key-49;
   }
-  seek = constrain(sel,0,name.length-1);
+  sel = constrain(sel,0,name.length-1);
 
   if(key=='q')
     flick = false;
