@@ -9,7 +9,8 @@ PImage mask;
 
 
 //String name[] = {"VTS_03_1.VOB","VTS_03_2.VOB","VTS_03_3.VOB"};
-String name[] = {"1.vob","2.vob","8.vob","4.vob","5.vob","6.vob","sen.mpg"};
+//String name[] = {"1.vob","2.vob","8.vob","4.vob","5.vob","6.vob","sen.mpg"};
+String name[] = {"1.vob","tydenik.mpg","tydenik2.mpg","sen.mpg"};
 
 int sel = 0;
 
@@ -120,12 +121,13 @@ void keyPressed(){
     flick = !flick;
 
   if(keyCode==LEFT)
-    seek--;
+    {
+  for(int i = 0 ; i < myMovie.length;i++){
+myMovie[i].jump(0);
+}
+    }
 
-  if(keyCode==RIGHT)
-    seek++;
 
-  seek = constrain(seek,5,2000);
 
   println((int)key);
   if(key > '0' && key <= '9')
