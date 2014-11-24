@@ -59,8 +59,8 @@ void draw() {
 
   if(frameCount<5)
     frame.setLocation(0,0);
-  background(0);
 
+  background(0);
   float am = (noise(millis()/10000.0))*255;
   float am2 = (noise(100000+millis()/10000.0))*255;
 
@@ -113,6 +113,18 @@ void draw() {
 
   //image(myMovie2, width/2,height/2+sin(millis()/am2*1000.0)*am2/60.0-10+H+450,620,430);
   // rect(1,1,width-2,height-2);
+
+  noStroke();
+  fill(255,(sin(frameCount/10.0)+0.5)*127.0);
+  rect(0,0,2,2);
+
+  fill(#ff0000,255-tnt);
+  rect(2,0,2,2);
+
+  fill(#00ff00,flick?255:0);
+  rect(4,0,2,2);
+
+
 }
 // Called every time a new frame is available to read
 void movieEvent(Movie m) {
