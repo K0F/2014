@@ -11,7 +11,7 @@ boolean sen = true;
 
 //String name[] = {"VTS_03_1.VOB","VTS_03_2.VOB","VTS_03_3.VOB"};
 //String name[] = {"1.vob","2.vob","8.vob","4.vob","5.vob","6.vob","sen.mpg"};
-String name[] = {"1.vob","tydenik.mpg","tydenik2.mpg","sen.mpg"};
+String name[] = {"1.vob","2.vob","8.vob","3.vob","sen.mpg"};
 
 int sel = 0;
 
@@ -20,7 +20,7 @@ float duration = 0;
 boolean flick = true;
 boolean fade = false;
 float tnt = 0;
-float msk = 0;
+float msk = 255;
 
 int seek = 5;
 
@@ -29,7 +29,6 @@ void init(){
   frame.setUndecorated(true);
   frame.addNotify();
   super.init();
-
 }
 
 void setup() {
@@ -51,7 +50,7 @@ void setup() {
   input.start();
 }
 
-float H = -50;
+float H = -120;
 
 void draw() {
 
@@ -96,20 +95,26 @@ void draw() {
     //   if(fade)
     //   tint(255,255-tnt);      
     pushMatrix();
-    if(sen && frameCount%3==0 &&sel==3){
-    translate(myMovie[2].width+20,0);
-    scale(-1,1);
-    }
-    image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/120.0+H);
-    
+    if(sen && frameCount%3==0 && sel==name.length-1){
+      translate(myMovie[name.length-2].width+45,0);
+      scale(-1,1);
+    image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/120.0+H,640,520);
+    }else if(sel==name.length-1){
+    image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/120.0+H,640,520);
+
+    }else{
+    image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/120.0+H,640,432);
+}
+
+
     popMatrix();
     noStroke();
     fill(0,tnt);
     rect(0,0,width,height);
+    
+ }
 
-  }
-  
-  
+
   tint(255,msk);
   image(mask,width/2+random(-1,1),height/2+random(-1,1)+H);
   noTint();
@@ -139,6 +144,9 @@ void draw() {
   rect(6,0,2,2);
 
 
+fill(0);
+    triangle(width,0,721,height,width,height);
+
 }
 // Called every time a new frame is available to read
 void movieEvent(Movie m) {
@@ -154,10 +162,10 @@ void keyPressed(){
     flick = !flick;
 
   if(keyCode==LEFT)
-    msk-=5;
+    msk+=5;
 
   if(keyCode==RIGHT)
-    msk+=5;
+    msk-=5;
 
   msk = constrain(msk,0,255);
 
@@ -174,6 +182,7 @@ void keyPressed(){
   {
     for(int i = 0 ; i < myMovie.length;i++){
       myMovie[i].jump(0);
+      myMovie[i].loop();
     }
   }
 
