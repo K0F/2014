@@ -6,6 +6,7 @@ GSCapture input;
 
 PImage mask;
 
+boolean sen = true;
 
 
 //String name[] = {"VTS_03_1.VOB","VTS_03_2.VOB","VTS_03_3.VOB"};
@@ -19,6 +20,7 @@ float duration = 0;
 boolean flick = true;
 boolean fade = false;
 float tnt = 0;
+float msk = 0;
 
 int seek = 5;
 
@@ -93,16 +95,24 @@ void draw() {
   }else{
     //   if(fade)
     //   tint(255,255-tnt);      
-
+    pushMatrix();
+    if(sen && frameCount%3==0 &&sel==3){
+    translate(myMovie[2].width+20,0);
+    scale(-1,1);
+    }
     image(myMovie[sel], width/2,height/2+sin(millis()/am*1000.0)*am/120.0+H);
-    image(mask,width/2+random(-1,1),height/2+random(-1,1)+H);
+    
+    popMatrix();
     noStroke();
     fill(0,tnt);
     rect(0,0,width,height);
 
   }
-
-  // noTint();
+  
+  
+  tint(255,msk);
+  image(mask,width/2+random(-1,1),height/2+random(-1,1)+H);
+  noTint();
 
   noStroke();
   fill(0);
@@ -125,6 +135,10 @@ void draw() {
   rect(4,0,2,2);
 
 
+  fill(#0000ff,msk);
+  rect(6,0,2,2);
+
+
 }
 // Called every time a new frame is available to read
 void movieEvent(Movie m) {
@@ -139,6 +153,15 @@ void keyPressed(){
   if(key==' ')
     flick = !flick;
 
+  if(keyCode==LEFT)
+    msk-=5;
+
+  if(keyCode==RIGHT)
+    msk+=5;
+
+  msk = constrain(msk,0,255);
+
+
   if(keyCode==UP)
     tnt-=5;
 
@@ -147,7 +170,7 @@ void keyPressed(){
 
   tnt = constrain(tnt,0,255);
 
-  if(keyCode==LEFT)
+  if(keyCode==ENTER)
   {
     for(int i = 0 ; i < myMovie.length;i++){
       myMovie[i].jump(0);
@@ -156,7 +179,7 @@ void keyPressed(){
 
 
 
-  println((int)key);
+  //println((int)key);
   if(key > '0' && key <= '9')
   {
     sel = (int)key-49;
