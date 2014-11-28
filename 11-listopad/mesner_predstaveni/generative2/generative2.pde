@@ -10,7 +10,31 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 // define the JPEG! picture filename
-String filename = "/home/kof/render/mesner_predstaveni/shot0004.jpg";
+String filenames [] = {
+"/home/kof/render/mesner_predstaveni/shot0001.jpg",
+"/home/kof/render/mesner_predstaveni/shot0002.jpg",
+"/home/kof/render/mesner_predstaveni/shot0003.jpg",
+"/home/kof/render/mesner_predstaveni/shot0004.jpg",
+"/home/kof/render/mesner_predstaveni/shot0006.jpg",
+"/home/kof/render/mesner_predstaveni/shot0007.jpg",
+"/home/kof/render/mesner_predstaveni/shot0008.jpg",
+"/home/kof/render/mesner_predstaveni/shot0009.jpg",
+"/home/kof/render/mesner_predstaveni/shot0010.jpg",
+"/home/kof/render/mesner_predstaveni/shot0011.jpg",
+"/home/kof/render/mesner_predstaveni/shot0012.jpg",
+"/home/kof/render/mesner_predstaveni/shot0013.jpg",
+"/home/kof/render/mesner_predstaveni/shot0014.jpg",
+"/home/kof/render/mesner_predstaveni/shot0015.jpg",
+"/home/kof/render/mesner_predstaveni/shot0016.jpg",
+"/home/kof/render/mesner_predstaveni/shot0017.jpg",
+"/home/kof/render/mesner_predstaveni/shot0018.jpg",
+"/home/kof/render/mesner_predstaveni/shot0019.jpg",
+"/home/kof/render/mesner_predstaveni/shot0020.jpg"
+};
+
+int reload = 10;
+int ammount = 10;
+int fade = 0;
 
 // create temporary awt.Image obejct
 Image tmp;
@@ -33,7 +57,7 @@ int dcnt[];
 void setup()
 {
   // load data into our array first
-  data = loadBytes(filename);
+  data = loadBytes(filenames[0]);
 
   // create the *console* arraylist, each line per entry
   txt = new ArrayList();
@@ -53,7 +77,7 @@ void setup()
   //size(ptmp.width, ptmp.height, P2D);
 
   //fixed width height for applet only
-  size(768,576);
+  size(800,600,P2D);
 
   //no smooth for more raw feeling and speed
   noSmooth();
@@ -131,8 +155,8 @@ PImage corruptImage(int howMuch) {
 void draw() {
   // every ten frames reload the original
   // the old one got really hurt
-  if (frameCount%10==0) {
-    data = loadBytes(filename);
+  if (frameCount%reload==0) {
+    data = loadBytes(filenames[(int)random(filenames.length)]);
   }
 
   // there is a call for more and more corrupted image
@@ -140,16 +164,20 @@ void draw() {
   // how much damage we need to cause it
   // to make it bit more interesting
   // we can pass some Perlin noise into process
-  ptmp = corruptImage((int)(noise(frameCount/30.0)*12));
+  ptmp = corruptImage((int)(noise(frameCount/30.0)*ammount));
 
   // voila! let's display actual result
-  image(ptmp, 0, 0);
+  image(ptmp, 0, 0, width,height);
 
+  noStroke();
+  fill(0,fade);
+  rect(0,0,width,height);
 
   // this loop is for that fancy
   // console-like output
   // it is really useless
   // anyway, i like it
+  /*
   for (int i = 0;i<txt.size();i++) {
     int pos = txt.size()*8;
     String ln = (String)txt.get(i);
@@ -167,17 +195,17 @@ void draw() {
 
   //and add it to arrayList we created before
   txt.add("ERROR matrix: "+matrix);
-
+*/
 
   // to not get completely overflowed java heap
   // lets remove old entries, the ones wich are not
   // displayed
-  if (txt.size()>height/8)
-    txt.remove(0);
+ // if (txt.size()>height/8)
+  //  txt.remove(0);
 
   //and finaly put some
   //border darkening effect
-  image(ram, 0, 0);
+//  image(ram, 0, 0);
 }
 /**
  *  Code to convert JPEG bytes to awt.Image
@@ -203,3 +231,37 @@ Image GetFromJPEG(byte[] jpegBytes) {
   return jpegImage;
 }
 
+
+void keyPressed(){
+  if(keyCode==RIGHT)
+    reload++;
+ 
+  if(keyCode==LEFT)
+    reload--;
+
+
+   if(keyCode==DOWN)
+    ammount-=5;
+
+   if(keyCode==UP)
+    ammount+=5;
+
+   if(keyCode==DOWN)
+    ammount-=5;
+
+   if(keyCode==UP)
+    ammount+=5;
+
+    if(key=='o')
+    fade--;
+
+    if(key=='l')
+    fade++;
+
+    ammount = constrain(ammount,0,500);
+    reload = constrain(reload,1,50);
+    fade = constrain(fade,0,255);
+ 
+
+    fade = 0;
+}
