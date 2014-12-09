@@ -32,7 +32,7 @@ int FADEOUT = 60;
 
 String result = "";
 
-boolean RENDER = true;
+boolean RENDER = false;
 
 void setup(){
 
