@@ -44,12 +44,12 @@ class Editor{
 
   void generate(){
     lines.remove(0);
-    lines.add("Ndef('a',{SinOsc.ar([22000,22000]*"+((1.0 / ((pow(2,((int)random(1,8))))+0.0)) )+",mul:0.2)}).play");
+    lines.add("Ndef('a',{SinOsc.ar([22000/"+(pow(2,(int)random(1,6)))+",22000/"+(pow(2,(int)random(1,6)))+"]*"+((1.0 / ((pow(2,((int)random(1,8))))+0.0)) )+",mul:0.2)}).play");
   }
 
   void render(){
 
-    fade += execute?255:-5;
+    fade += execute?255:-15;
     fade = constrain(fade,0,255);
     
     pushMatrix();
@@ -68,7 +68,6 @@ class Editor{
         w = textWidth(curr);
         
         if(execute){
-         generate();
          sclang((String)lines.get(current));
          execute = false;
        }
