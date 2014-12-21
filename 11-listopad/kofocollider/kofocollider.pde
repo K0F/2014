@@ -8,10 +8,10 @@ void setup(){
   editor = new Editor();
 
   //  execute("/home/kof/sketchBook/2014/11-listopad/kofocollider/boot.sh");
-  //  delay(7000);
-  sclang("s.boot");//"s = Server.local;s.boot;Server.internal=s;Server.default=s;Server.local=s;");
+  sclang("s.reboot");//"s = Server.local;s.boot;Server.internal=s;Server.default=s;Server.local=s;");
+  sclang("Ndef('a').fadeTime = 0.02");
+  sclang("Ndef('a').quant = 0.0");
 
-  sclang("Ndef('a').fadeTime = 1.0");
 }
 
 void mousePressed(){
@@ -32,16 +32,26 @@ class Editor{
   int current = 0;
   float w =0;
   boolean execute = false;
+  float fade = 0;
 
   Editor(){
     lines = new ArrayList();
-    println(PFont.list());
+    //println(PFont.list());
     textFont(loadFont("SempliceRegular-8.vlw"));
 
-    lines.add("Ndef('a',{SinOsc.ar([220,220.1]*"+(int)random(1,10)+",mul:0.2)}).play");
+    lines.add("Ndef('a',{SinOsc.ar([220,220.1],mul:0.2)}).play");
+  }
+
+  void generate(){
+    lines.remove(0);
+    lines.add("Ndef('a',{SinOsc.ar([22000,22000]*"+((1.0 / ((pow(2,((int)random(1,8))))+0.0)) )+",mul:0.2)}).play");
   }
 
   void render(){
+
+    fade += execute?255:-5;
+    fade = constrain(fade,0,255);
+    
     pushMatrix();
     translate(0,20);
 
@@ -52,14 +62,34 @@ class Editor{
       text(curr,20,i*8);
 
       if(i==current){
-        fill((sin(millis()/100.0)+1.0)/2*255);
+     fill(#ffcc00,fade);
+         rect(20-2,i*8+2,w+12,-11);
+     
         w = textWidth(curr);
+        
+        if(execute){
+         generate();
+         sclang((String)lines.get(current));
+         execute = false;
+       }
+        
+        fill((sin(millis()/100.0)+1.0)/2*255);
         text("#",w+20,i*8);
+
+
       }
     }
 
     popMatrix();
 
+  }
+
+}
+
+void keyPressed(){
+
+  if(keyCode==ENTER){
+    editor.execute = true;
   }
 
 }
@@ -120,3 +150,8 @@ void sclang(String _in){
   execute("echo \""+_in+";\" > /tmp/lang");
 }
 
+
+void exit(){
+  sclang("s.freeAll");
+  super.exit();
+}
