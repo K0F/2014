@@ -14,7 +14,7 @@ int rate = 2;
 
 void setup(){
 
-  size(320,240,P2D);
+  size(320,240);
 
   frameRate(60);
   speed_set(1.0);

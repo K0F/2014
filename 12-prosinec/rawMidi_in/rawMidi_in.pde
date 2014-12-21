@@ -12,13 +12,13 @@ float fade[];
 color colors[];
 
 void setup() {
-  size(256, 256,OPENGL);
-  println("Midi device list:");
-  println(RWMidi.getInputDeviceNames());
+  size(256, 256);
+  //println("Midi device list:");
+  //println(RWMidi.getInputDeviceNames());
   input = RWMidi.getInputDevices()[0].createInput(this);
-  output = RWMidi.getOutputDevices()[1].createOutput();
-  println("Input: " + input.getName());
-  println("Output: " + output.getName());
+  //output = RWMidi.getOutputDevices()[1].createOutput();
+  //println("Input: " + input.getName());
+  //println("Output: " + output.getName());
 
   bang = new boolean[128];
   fade = new float[128];
@@ -49,7 +49,9 @@ void draw() {
     }
 
     if(fade[i]>=0)
-    fade[i] -= 25.0;
+      fade[i] -= 100.0;
+
+      fade[i] = constrain(fade[i],0,255);
   }
 
 }
@@ -58,24 +60,22 @@ void draw() {
 ///////////////////////////////////////////
 void noteOnReceived(Note note) {
   notePlayed = note.getPitch();
-if(frameCount>10){
-  bang[notePlayed] = true;
-  fade[notePlayed] = 255;
-}
-// println("Note on: " + note.getPitch() + ", velocity: " + note.getVelocity());
+  if(frameCount>10){
+    bang[notePlayed] = true;
+    fade[notePlayed] = 255;
+  }
+  // println("Note on: " + note.getPitch() + ", velocity: " + note.getVelocity());
 }
 
 void noteOffReceived(Note note) {
 
-if(frameCount>10){
-  bang[note.getPitch()] = false;
-  fade[note.getPitch()] = 0;
-}
- // println("Note off: " + note.getPitch());
+  if(frameCount>10){
+    bang[note.getPitch()] = false;
+    fade[note.getPitch()] = 0;
+  }
+  // println("Note off: " + note.getPitch());
 }
 
 void controllerChangeReceived(Controller controller) {
-//  println("CC: " + controller.getCC() + ", value: " + controller.getValue());
+  //  println("CC: " + controller.getCC() + ", value: " + controller.getValue());
 }
-
-

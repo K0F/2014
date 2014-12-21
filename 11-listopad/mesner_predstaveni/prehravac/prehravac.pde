@@ -62,7 +62,7 @@ void draw() {
     frame.setLocation(0,0);
 
   background(0);
-  float am = (noise(millis()/10000.0))*255;
+  float am = (noise(millis()/10000.0))*127;
   float am2 = (noise(100000+millis()/10000.0))*255;
 
   //tint(255,255);
@@ -78,6 +78,7 @@ void draw() {
   if(flick){
     pushMatrix();
     translate(width/2+20, height/2+sin(millis()/am*1000.0)*am/90.0-10+H);
+    //translate(width/2+20, height/2+sin(millis()/am*1000.0)*am/900.0-10+H);
     rotate(-HALF_PI);
 
 
