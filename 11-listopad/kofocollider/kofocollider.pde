@@ -21,17 +21,12 @@ void init(){
 }
 
 void setup(){
-  size(800,600);
+  size(800,900);
   editor = new Editor();
-}
-
-void mousePressed(){
 }
 
 void draw(){
   background(0);
-
-
 
   //sclang("Ndef('a',{SinOsc.ar([220,220.1]*"+(int)random(1,10)+",mul:0.2)}).play");
   editor.render();
@@ -44,7 +39,7 @@ class Editor{
   int currln = 0;
   int carret = 0;
 
-  int rozpal = 12;
+  int rozpal = 14;
 
   float w =0,wc =0;
   boolean execute = false;
@@ -160,7 +155,7 @@ void keyPressed(){
   }
 
   editor.carret = constrain(editor.carret,0,((String)editor.lines.get(editor.currln)).length());
-
+  editor.currln = constrain(editor.currln,0,editor.lines.size()-1);
 }
 
 
