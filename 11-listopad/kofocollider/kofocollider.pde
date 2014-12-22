@@ -9,8 +9,8 @@ void setup(){
 
   //  execute("/home/kof/sketchBook/2014/11-listopad/kofocollider/boot.sh");
   sclang("s.reboot");//"s = Server.local;s.boot;Server.internal=s;Server.default=s;Server.local=s;");
-  sclang("Ndef('a').fadeTime = 0.02");
-  sclang("Ndef('a').quant = 0.0");
+  sclang("Ndef('a').fadeTime = 2.0");
+  sclang("Ndef('a').quant = 1.0");
 
 }
 
@@ -33,7 +33,7 @@ class Editor{
   int current = 0;
   int carret = 0;
 
-  float w =0;
+  float w =0,wc =0;
   boolean execute = false;
   float fade = 0;
 
@@ -69,15 +69,16 @@ class Editor{
         fill(#ffcc00,fade);
         rect(20-2,i*8+2,w+12,-11);
 
-        w = textWidth(curr.substring(0,carret));
-
+        w = textWidth(curr);
+        wc = textWidth(curr.substring(0,carret));
+        
         if(execute){
           sclang((String)lines.get(current));
           execute = false;
         }
 
         fill(#ff0000,(sin(millis()/100.0)+1.0)/2*255);
-        text("|",w+20,i*8);
+        text("!",wc+20-3,i*8);
 
 
       }
@@ -100,6 +101,26 @@ void keyPressed(){
 
   if(keyCode==RIGHT)
     editor.carret++;
+
+  if(keyCode==BACKSPACE && editor.carret>0){
+    String tmp = (String)editor.lines.get(editor.current);
+    editor.lines.set(editor.current,tmp.substring(0,editor.carret-1)+""+tmp.substring(editor.carret,tmp.length()));
+    editor.carret--;
+  }
+  
+  if(keyCode==DELETE){
+    String tmp = (String)editor.lines.get(editor.current);
+    editor.lines.set(editor.current,tmp.substring(0,editor.carret)+""+tmp.substring(editor.carret+1,tmp.length()));
+    editor.carret--;
+  } 
+
+  if((int)key>=24 && (int)key <= 126){
+    String tmp = (String)editor.lines.get(editor.current);
+    editor.lines.set(editor.current,tmp.substring(0,editor.carret)+""+key+tmp.substring(editor.carret,tmp.length()));
+    editor.carret++;
+  }
+
+
 
   editor.carret = constrain(editor.carret,0,((String)editor.lines.get(editor.current)).length() );
 }
