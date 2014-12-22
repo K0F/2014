@@ -29,7 +29,10 @@ void draw(){
 
 class Editor{
   ArrayList lines;
+
   int current = 0;
+  int carret = 0;
+
   float w =0;
   boolean execute = false;
   float fade = 0;
@@ -37,7 +40,8 @@ class Editor{
   Editor(){
     lines = new ArrayList();
     //println(PFont.list());
-    textFont(loadFont("SempliceRegular-8.vlw"));
+    //textFont(loadFont("SempliceRegular-8.vlw"));
+    textFont(loadFont("LiberationMono-12.vlw"));
 
     lines.add("Ndef('a',{SinOsc.ar([220,220.1],mul:0.2)}).play");
   }
@@ -51,7 +55,7 @@ class Editor{
 
     fade += execute?255:-15;
     fade = constrain(fade,0,255);
-    
+
     pushMatrix();
     translate(0,20);
 
@@ -62,18 +66,18 @@ class Editor{
       text(curr,20,i*8);
 
       if(i==current){
-     fill(#ffcc00,fade);
-         rect(20-2,i*8+2,w+12,-11);
-     
-        w = textWidth(curr);
-        
+        fill(#ffcc00,fade);
+        rect(20-2,i*8+2,w+12,-11);
+
+        w = textWidth(curr.substring(0,carret));
+
         if(execute){
-         sclang((String)lines.get(current));
-         execute = false;
-       }
-        
-        fill((sin(millis()/100.0)+1.0)/2*255);
-        text("#",w+20,i*8);
+          sclang((String)lines.get(current));
+          execute = false;
+        }
+
+        fill(#ff0000,(sin(millis()/100.0)+1.0)/2*255);
+        text("|",w+20,i*8);
 
 
       }
@@ -91,6 +95,13 @@ void keyPressed(){
     editor.execute = true;
   }
 
+  if(keyCode==LEFT)
+    editor.carret--;
+
+  if(keyCode==RIGHT)
+    editor.carret++;
+
+  editor.carret = constrain(editor.carret,0,((String)editor.lines.get(editor.current)).length() );
 }
 
 
