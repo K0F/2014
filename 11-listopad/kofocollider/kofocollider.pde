@@ -2,10 +2,17 @@ import java.io.*;
 
 Editor editor;
 
+String sketchAbsPath = "/sketchBook/2014/11-listopad/kofocollider";
+
 void setup(){
   size(800,600);
 
   editor = new Editor();
+  execute("rm /tmp/lang ; mkfifo /tmp/lang ; chmod 777 /tmp/lang");
+  execute("pkill scsynth");
+  delay(200);
+  execute("(tail -f /tmp/lang | supercollider)");
+  //execute("(terminator -x sh "+sketchAbsPath+"/boot.sh &)" );
 
   //  execute("/home/kof/sketchBook/2014/11-listopad/kofocollider/boot.sh");
   sclang("s.reboot");//"s = Server.local;s.boot;Server.internal=s;Server.default=s;Server.local=s;");
@@ -142,6 +149,7 @@ class Executer implements Runnable{
       Runtime runtime = Runtime.getRuntime();
 
       String cmd[] = {"/bin/sh","-c",command};
+      String env[] = {"PATH=/bin/:/usr/bin/:/usr/local/bin/","DISPLAY=:0.0","SHELL=/bin/bash","USER=kof"};
 
       Process p = runtime.exec(cmd);
 
@@ -184,5 +192,6 @@ void sclang(String _in){
 
 void exit(){
   sclang("s.freeAll");
+  execute("pkill scsynth");
   super.exit();
 }
