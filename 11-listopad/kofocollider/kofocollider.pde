@@ -4,13 +4,11 @@ Editor editor;
 
 String sketchAbsPath = "/sketchBook/2014/11-listopad/kofocollider";
 
-void setup(){
-  size(800,600);
+void init(){
 
-  editor = new Editor();
   execute("rm /tmp/lang ; mkfifo /tmp/lang ; chmod 777 /tmp/lang");
   execute("pkill scsynth");
-  delay(200);
+  delay(250);
   execute("(tail -f /tmp/lang | supercollider)");
   //execute("(terminator -x sh "+sketchAbsPath+"/boot.sh &)" );
 
@@ -19,6 +17,12 @@ void setup(){
   sclang("Ndef('a').fadeTime = 2.0");
   sclang("Ndef('a').quant = 1.0");
 
+  super.init();
+}
+
+void setup(){
+  size(800,600);
+  editor = new Editor();
 }
 
 void mousePressed(){
@@ -37,8 +41,10 @@ void draw(){
 class Editor{
   ArrayList lines;
 
-  int current = 0;
+  int currln = 0;
   int carret = 0;
+
+  int rozpal = 12;
 
   float w =0,wc =0;
   boolean execute = false;
@@ -51,6 +57,8 @@ class Editor{
     textFont(loadFont("LiberationMono-12.vlw"));
 
     lines.add("Ndef('a',{SinOsc.ar([220,220.1],mul:0.2)}).play");
+    for(int i = 0 ; i<50;i++)
+    lines.add(new String(""));
   }
 
   void generate(){
@@ -59,6 +67,8 @@ class Editor{
   }
 
   void render(){
+
+    //carret = constrain(carret,0,((String)lines.get(currln)).length()-1);
 
     fade += execute?255:-15;
     fade = constrain(fade,0,255);
@@ -70,22 +80,22 @@ class Editor{
     for(int i =0 ; i < lines.size();i++){
       String curr = (String)lines.get(i);
       fill(255);
-      text(curr,20,i*8);
+      text(curr,20,i*rozpal);
 
-      if(i==current){
+      if(i==currln){
         fill(#ffcc00,fade);
-        rect(20-2,i*8+2,w+12,-11);
+        rect(20-2,i*rozpal+2,w+12,-11);
 
         w = textWidth(curr);
         wc = textWidth(curr.substring(0,carret));
-        
+
         if(execute){
-          sclang((String)lines.get(current));
+          sclang((String)lines.get(currln));
           execute = false;
         }
 
         fill(#ff0000,(sin(millis()/100.0)+1.0)/2*255);
-        text("!",wc+20-3,i*8);
+        text("!",wc+20-3,i*rozpal);
 
 
       }
@@ -109,27 +119,44 @@ void keyPressed(){
   if(keyCode==RIGHT)
     editor.carret++;
 
+  if(keyCode==DOWN){
+      editor.currln++;
+
+  //  if(editor.currln>editor.lines.size()-1){
+   //   editor.lines.add(new String(""));
+    //  editor.carret = 0;
+    //  editor.currln++;
+    //}else{
+   // }
+
+
+  }
+
+  if(keyCode==UP){
+    if(editor.currln>=0)
+      editor.currln--;
+  }
+
   if(keyCode==BACKSPACE && editor.carret>0){
-    String tmp = (String)editor.lines.get(editor.current);
-    editor.lines.set(editor.current,tmp.substring(0,editor.carret-1)+""+tmp.substring(editor.carret,tmp.length()));
+    String tmp = (String)editor.lines.get(editor.currln);
+    editor.lines.set(editor.currln,tmp.substring(0,editor.carret-1)+""+tmp.substring(editor.carret,tmp.length()));
     editor.carret--;
   }
-  
+
   if(keyCode==DELETE){
-    String tmp = (String)editor.lines.get(editor.current);
-    editor.lines.set(editor.current,tmp.substring(0,editor.carret)+""+tmp.substring(editor.carret+1,tmp.length()));
+    String tmp = (String)editor.lines.get(editor.currln);
+    editor.lines.set(editor.currln,tmp.substring(0,editor.carret)+""+tmp.substring(editor.carret+1,tmp.length()));
     editor.carret--;
   } 
 
   if((int)key>=24 && (int)key <= 126){
-    String tmp = (String)editor.lines.get(editor.current);
-    editor.lines.set(editor.current,tmp.substring(0,editor.carret)+""+key+tmp.substring(editor.carret,tmp.length()));
+    String tmp = (String)editor.lines.get(editor.currln);
+    editor.lines.set(editor.currln,tmp.substring(0,editor.carret)+""+key+tmp.substring(editor.carret,tmp.length()));
     editor.carret++;
   }
 
+  editor.carret = constrain(editor.carret,0,((String)editor.lines.get(editor.currln)).length()-1 );
 
-
-  editor.carret = constrain(editor.carret,0,((String)editor.lines.get(editor.current)).length() );
 }
 
 
