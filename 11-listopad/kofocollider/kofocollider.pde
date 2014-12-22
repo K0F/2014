@@ -139,14 +139,18 @@ void keyPressed(){
 
   if(keyCode==BACKSPACE && editor.carret>0){
     String tmp = (String)editor.lines.get(editor.currln);
+    if(tmp.length()>0){
     editor.lines.set(editor.currln,tmp.substring(0,editor.carret-1)+""+tmp.substring(editor.carret,tmp.length()));
     editor.carret--;
+    }
   }
 
   if(keyCode==DELETE){
     String tmp = (String)editor.lines.get(editor.currln);
+    if(tmp.length()>0){
     editor.lines.set(editor.currln,tmp.substring(0,editor.carret)+""+tmp.substring(editor.carret+1,tmp.length()));
     editor.carret--;
+    }
   } 
 
   if((int)key>=24 && (int)key <= 126){
@@ -155,7 +159,7 @@ void keyPressed(){
     editor.carret++;
   }
 
-  editor.carret = constrain(editor.carret,0,((String)editor.lines.get(editor.currln)).length()-1 );
+  editor.carret = constrain(editor.carret,0,((String)editor.lines.get(editor.currln)).length());
 
 }
 
